@@ -7,22 +7,25 @@ import { RegisterComponent } from './register.component';
 import { VerifyEmailComponent } from './verify-email.component';
 import { ForgotPasswordComponent } from './forgot-password.component';
 import { ResetPasswordComponent } from './reset-password.component';
+import { AccountComponent } from './account.component'; // ✅ new import
 
 const routes: Routes = [
-    {
-        path: '', component: LayoutComponent,
-        children: [
-            { path: 'login', component: LoginComponent },
-            { path: 'register', component: RegisterComponent },
-            { path: 'verify-email', component: VerifyEmailComponent },
-            { path: 'forgot-password', component: ForgotPasswordComponent },
-            { path: 'reset-password', component: ResetPasswordComponent }
-        ]
-    }
+  {
+    path: '', component: LayoutComponent,
+    children: [
+      { path: '', component: AccountComponent },  // ✅ shows AccountComponent
+      { path: 'login', component: LoginComponent },
+      { path: 'register', component: RegisterComponent },
+      { path: 'verify-email', component: VerifyEmailComponent },
+      { path: 'forgot-password', component: ForgotPasswordComponent },
+      { path: 'reset-password', component: ResetPasswordComponent }
+    ]
+  }
 ];
 
+
 @NgModule({
-    imports: [RouterModule.forChild(routes)],
-    exports: [RouterModule]
+  imports: [RouterModule.forChild(routes)],
+  exports: [RouterModule]
 })
 export class AccountRoutingModule { }

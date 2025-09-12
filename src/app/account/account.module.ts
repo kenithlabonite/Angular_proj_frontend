@@ -9,20 +9,22 @@ import { RegisterComponent } from './register.component';
 import { VerifyEmailComponent } from './verify-email.component';
 import { ForgotPasswordComponent } from './forgot-password.component';
 import { ResetPasswordComponent } from './reset-password.component';
+import { AccountComponent } from './account.component'; // ✅ new import
 
 @NgModule({
-    imports: [
-        CommonModule,
-        ReactiveFormsModule,
-        AccountRoutingModule
-    ],
-    declarations: [
-        LayoutComponent,
-        LoginComponent,
-        RegisterComponent,
-        VerifyEmailComponent,
-        ForgotPasswordComponent,
-        ResetPasswordComponent
-    ]
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    AccountRoutingModule
+  ],
+  declarations: [
+    LayoutComponent,
+    LoginComponent,
+    RegisterComponent,
+    VerifyEmailComponent,
+    ForgotPasswordComponent,
+    ResetPasswordComponent,
+    AccountComponent   // ✅ declare AccountComponent here
+  ]
 })
 export class AccountModule { }
