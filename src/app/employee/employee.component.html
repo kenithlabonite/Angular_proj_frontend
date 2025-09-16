@@ -1,136 +1,36 @@
-<h2>Employees Page</h2>
-<p>Welcome to the Employees section.</p>
-<!-- <div id="employees-section" class="">
-            <div class="card">
-                <div class="card-header"><h5>EMPLOYEES</h5></div>
-                <div class="card-body">
-                    <div class="table-responsive">
-                        <table class="table table-striped">
-                            <thead>
-                                <tr>
-                                    <th>Employee ID</th>
-                                    <th>Account</th>
-                                    <th>Position</th>
-                                    <th>Department</th>
-                                    <th>Hire Date</th>
-                                    <th>Status</th>
-                                    <th>Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody id="employees-table-body">
-                    <tr>
-                        <td>EMP001</td>
-                        <td>admin@example.com</td>
-                        <td>Developer</td>
-                        <td>Engineering</td>
-                        <td>1/1/2025</td>
-                        <td><span class="badge bg-success">Active</span></td>
-                        <td>
-                            <button class="btn btn-sm btn-info action-btn me-1" onclick="viewRequests(1)">Requests</button>
-                            <button class="btn btn-sm btn-info action-btn me-1" onclick="viewWorkflows(1)">Workflows</button>
-                            <button class="btn btn-sm btn-warning action-btn me-1" onclick="showTransferModal(1)">Transfer</button>
-                            <button class="btn btn-sm btn-primary action-btn" onclick="showEmployeeForm(1)">Edit</button>
-                        </td>
-                    </tr>
-                
-                    <tr>
-                        <td>EMP002</td>
-                        <td>user@example.com</td>
-                        <td>Designer</td>
-                        <td>Marketing</td>
-                        <td>2/1/2025</td>
-                        <td><span class="badge bg-success">Active</span></td>
-                        <td>
-                            <button class="btn btn-sm btn-info action-btn me-1" onclick="viewRequests(2)">Requests</button>
-                            <button class="btn btn-sm btn-info action-btn me-1" onclick="viewWorkflows(2)">Workflows</button>
-                            <button class="btn btn-sm btn-warning action-btn me-1" onclick="showTransferModal(2)">Transfer</button>
-                            <button class="btn btn-sm btn-primary action-btn" onclick="showEmployeeForm(2)">Edit</button>
-                        </td>
-                    </tr>
-                </tbody>
-                        </table>
-                    </div>
-                    <button class="btn btn-primary float-end" onclick="showEmployeeForm(null)">Add Employee</button>
-                </div>
-            </div>
-        </div>
-        <div id="employee-form-section" class="">
-            <div class="card">
-                <div class="card-header"><h5 id="employee-form-title">ADD EMPLOYEE</h5></div>
-                <div class="card-body">
-                    <div class="alert alert-danger hidden" id="employee-form-error"></div>
-                    <div class="mb-3">
-                        <label class="form-label">Employee ID</label>
-                        <input type="text" class="form-control" id="employee-id">
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Account</label>
-                        <select class="form-select" id="employee-user"><option value="1">admin@example.com (Admin User)</option><option value="2">user@example.com (Normal User)</option></select>
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Position</label>
-                        <input type="text" class="form-control" id="employee-position">
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Department</label>
-                        <select class="form-select" id="employee-department"><option value="1">Engineering</option><option value="2">Marketing</option></select>
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Hire Date</label>
-                        <input type="date" class="form-control" id="employee-hire-date">
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Status</label>
-                        <select class="form-select" id="employee-status">
-                            <option>Active</option>
-                            <option>Inactive</option>
-                        </select>
-                    </div>
-                    <div class="text-center">
-                        <button class="btn btn-primary me-2" onclick="saveEmployee()">Save</button>
-                        <button class="btn btn-secondary" onclick="showSection('employees')">Cancel</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="modal fade hidden show" id="transferModal" tabindex="-1" style="display: block;" aria-modal="true" role="dialog">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="transferModalLabel">Transfer Employee: EMP001</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                    </div>
-                    <div class="modal-body">
-                        <div class="mb-3">
-                            <label class="form-label">Department</label>
-                            <select class="form-select" id="transfer-department"><option value="1" selected="">Engineering</option><option value="2">Marketing</option></select>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button class="btn btn-warning" onclick="transferEmployee()">Transfer</button>
-                        <button class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div id="workflows-section" class="">
-            <div class="card">
-                <div class="card-header"><h5 id="workflows-title">WORKFLOWS FOR EMPLOYEE EMP002</h5></div>
-                <div class="card-body">
-                    <div class="table-responsive">
-                        <table class="table table-striped">
-                            <thead>
-                                <tr>
-                                    <th>Type</th>
-                                    <th>Details</th>
-                                    <th>Status</th>
-                                    <th>Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody id="workflows-table-body"><tr><td colspan="4" class="text-center text-muted">No workflows found for this employee.</td></tr></tbody>
-                        </table>
-                    </div>
-                    <button class="btn btn-secondary float-end" onclick="showSection('employees')">Back to Employees</button>
-                </div>
-            </div>
-        </div> -->
+<div class="p-4">
+  <div class="container">
+    <h1>Employees Page</h1>
+    <p>Welcome to the Employees section.</p>
+
+    <table class="table table-striped mt-4" *ngIf="employees.length > 0; else noEmployees">
+      <thead>
+        <tr>
+          <th>Employee ID</th>
+          <th>Accounts</th>
+          <th>Position</th>
+          <th>Department</th>
+          <th>Hire Date</th>
+          <th>Status</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let emp of employees">
+          <td>{{ emp.EmployeeID }}</td>
+          <td>{{ emp.email }}</td>
+          <td>{{ emp.position }}</td>
+          <td>{{ emp.department }}</td>
+          <td>{{ emp.hireDate | date:'yyyy-MM-dd' }}</td>
+          <td>
+            <span class="badge bg-success">{{ emp.status }}</span>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <ng-template #noEmployees>
+      <p class="text-muted mt-3">No active employees found.</p>
+    </ng-template>
+  </div>
+</div>
