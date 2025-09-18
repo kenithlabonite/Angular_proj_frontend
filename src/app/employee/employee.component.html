@@ -1,34 +1,63 @@
 <div class="p-4">
   <div class="container">
-    <h1>Employees Page</h1>
-    <p>Welcome to the Employees section.</p>
+    <!-- Header -->
+    <div class="d-flex justify-content-between align-items-center mb-3">
+      <h1 class="mb-0">Employees</h1>
+      <a routerLink="/employees/add" class="btn btn-primary">
+        <i class="bi bi-person-plus"></i> Add Employee
+      </a>
+    </div>
 
+    <p class="text-muted">Welcome to the Employees section.</p>
+
+    <!-- Employees Table -->
     <table class="table table-striped mt-4" *ngIf="employees.length > 0; else noEmployees">
-      <thead>
+      <thead class="table-light">
         <tr>
           <th>Employee ID</th>
-          <th>Accounts</th>
+          <th>Full Name</th>
+          <th>Email</th>
+          <th>Role</th>
           <th>Position</th>
           <th>Department</th>
           <th>Hire Date</th>
           <th>Status</th>
-          <th>Actions</th>
+          <th class="text-center">Actions</th>
         </tr>
       </thead>
       <tbody>
         <tr *ngFor="let emp of employees">
           <td>{{ emp.EmployeeID }}</td>
+          <td>{{ emp.firstName }} {{ emp.lastName }}</td>
           <td>{{ emp.email }}</td>
+          <td>{{ emp.role }}</td>
           <td>{{ emp.position }}</td>
           <td>{{ emp.department }}</td>
-          <td>{{ emp.hireDate | date:'yyyy-MM-dd' }}</td>
+          <td>{{ emp.hireDate | date: 'yyyy-MM-dd' }}</td>
           <td>
-            <span class="badge bg-success">{{ emp.status }}</span>
+            <span 
+              class="badge"
+              [ngClass]="emp.status === 'active' ? 'bg-success' : 'bg-secondary'">
+              {{ emp.status }}
+            </span>
+          </td>
+          <td class="d-flex justify-content-center">
+            <button class="btn btn-sm btn-info me-1" routerLink="/requests">Requests</button>
+            <button class="btn btn-sm btn-info me-1" routerLink="/admin/accounts">Workflows</button>
+            <button class="btn btn-sm btn-warning me-1" [routerLink]="['/employees/transfer', emp.EmployeeID]">Transfer</button>
+
+            <button class="btn btn-sm btn-primary me-1" routerLink="/admin/accounts">Edit</button>
+            <!--
+            <button class="btn btn-sm btn-danger me-1" (click)="deleteEmployee(emp)">
+              Delete
+            </button>
+            -->
           </td>
         </tr>
       </tbody>
     </table>
 
+    <!-- Empty state -->
     <ng-template #noEmployees>
       <p class="text-muted mt-3">No active employees found.</p>
     </ng-template>

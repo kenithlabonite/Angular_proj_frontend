@@ -1,0 +1,65 @@
+<div class="container mt-4">
+  <div class="card shadow-sm">
+    <div class="card-header">
+      <h5>Add Employee</h5>
+    </div>
+    <div class="card-body">
+      <form (ngSubmit)="onSubmit()" #employeeForm="ngForm">
+
+        <!-- Employee ID (auto-generated, disabled) -->
+        <div class="mb-3">
+          <label class="form-label">Employee ID</label>
+          <input type="text" class="form-control" [(ngModel)]="employee.employeeId" name="employeeId" disabled>
+        </div>
+
+        <!-- Account Email (only Active accounts) -->
+        <div class="mb-3">
+          <label class="form-label">Account (Email)</label>
+          <select class="form-select" [(ngModel)]="employee.userId" name="userId" required>
+            <option *ngFor="let acc of accounts" [value]="acc.id">
+              {{ acc.email }} ({{ acc.firstName }} {{ acc.lastName }})
+            </option>
+          </select>
+        </div>
+
+        <!-- Position -->
+        <div class="mb-3">
+          <label class="form-label">Position</label>
+          <input type="text" class="form-control" [(ngModel)]="employee.position" name="position" required>
+        </div>
+
+        <!-- Department -->
+        <div class="mb-3">
+          <label class="form-label">Department</label>
+          <select class="form-select" [(ngModel)]="employee.departmentId" name="departmentId" required>
+            <option *ngFor="let dept of departments" [value]="dept.id">{{ dept.name }}</option>
+          </select>
+        </div>
+
+        <!-- Hire Date -->
+        <div class="mb-3">
+          <label class="form-label">Hire Date</label>
+          <input type="date" class="form-control" [(ngModel)]="employee.hireDate" name="hireDate" required>
+        </div>
+
+        <!-- Status (default Active) -->
+        <div class="mb-3">
+          <label class="form-label">Status</label>
+          <select class="form-select" [(ngModel)]="employee.status" name="status">
+            <option value="Active">Active</option>
+            <option value="Inactive">Inactive</option>
+          </select>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="text-center">
+          <button type="submit" class="btn btn-success me-2" [disabled]="!employeeForm.form.valid">
+            Save
+          </button>
+          <a routerLink="/employees" class="btn btn-secondary">Cancel</a>
+        </div>
+
+      </form>
+    </div>
+  </div>
+</div>

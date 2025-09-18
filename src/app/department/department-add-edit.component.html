@@ -1,0 +1,39 @@
+<div class="container mt-4">
+  <h2>{{ title }}</h2>
+
+  <form [formGroup]="form" (ngSubmit)="onSubmit()">
+    <!-- Department Name -->
+    <div class="mb-3">
+      <label for="name" class="form-label">Department Name</label>
+      <input
+        id="name"
+        type="text"
+        formControlName="name"
+        class="form-control"
+        [ngClass]="{ 'is-invalid': form.get('name')?.touched && form.get('name')?.invalid }"
+      />
+      <div *ngIf="form.get('name')?.touched && form.get('name')?.invalid" class="invalid-feedback">
+        Name is required
+      </div>
+    </div>
+
+    <!-- Description -->
+    <div class="mb-3">
+      <label for="description" class="form-label">Description</label>
+      <textarea
+        id="description"
+        formControlName="description"
+        class="form-control"
+        rows="3"
+      ></textarea>
+    </div>
+
+    <!-- Actions -->
+    <div class="mt-3">
+      <button type="submit" class="btn btn-primary me-2" [disabled]="submitting">
+        {{ submitting ? 'Saving…' : (id ? 'Update' : 'Create') }}
+      </button>
+      <a routerLink="/departments" class="btn btn-secondary">Cancel</a>
+    </div>
+  </form>
+</div>

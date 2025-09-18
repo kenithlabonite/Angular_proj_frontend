@@ -1,65 +1,35 @@
-<div class="p-4">
-    <div class="container">
-        <h1>Departments Page</h1>
-        <p>Welcome to the Departments section.</p>
-    </div>
+<div class="container mt-4">
+  <h1>Departments</h1>
+  <p>Welcome to the Employees section.</p>
+  <div *ngIf="loading" class="alert alert-info">Loading...</div>
+  <div *ngIf="error" class="alert alert-danger">{{ error }}</div>
+
+  <table class="table table-striped mt-3" *ngIf="departments.length > 0">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Description</th>
+        <th>Employee Count</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let dept of departments">
+        <td>{{ dept.id }}</td>
+        <td>{{ dept.name }}</td>
+        <td>{{ dept.description }}</td>
+        <td>{{ dept.employeeCounts }}</td>
+        <td>
+          <button class="btn btn-sm btn-primary" (click)="onEdit(dept)">Edit</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+<div class="text-end">
+  <button class="btn btn-primary mb-3" (click)="onAdd()">+ Add Department</button>
 </div>
-<!-- <div id="departments-section" class="">
-            <div class="card">
-                <div class="card-header"><h5>DEPARTMENTS</h5></div>
-                <div class="card-body">
-                    <div class="table-responsive">
-                        <table class="table table-striped">
-                            <thead>
-                                <tr>
-                                    <th>Name</th>
-                                    <th>Description</th>
-                                    <th>Employee Count</th>
-                                    <th>Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody id="departments-table-body">
-                    <tr>
-                        <td>Engineering</td>
-                        <td>Software development team</td>
-                        <td>1</td>
-                        <td>
-                            <button class="btn btn-sm btn-primary action-btn me-1" onclick="showDepartmentForm(1)">Edit</button>
-                        </td>
-                    </tr>
-                
-                    <tr>
-                        <td>Marketing</td>
-                        <td>Marketing team</td>
-                        <td>1</td>
-                        <td>
-                            <button class="btn btn-sm btn-primary action-btn me-1" onclick="showDepartmentForm(2)">Edit</button>
-                        </td>
-                    </tr>
-                </tbody>
-                        </table>
-                    </div>
-                    <button class="btn btn-primary float-end" onclick="showDepartmentForm(null)">Add Department</button>
-                </div>
-            </div>
-        </div>
-        <div id="department-form-section" class="">
-            <div class="card">
-                <div class="card-header"><h5 id="department-form-title">ADD DEPARTMENT</h5></div>
-                <div class="card-body">
-                    <div class="alert alert-danger hidden" id="department-form-error"></div>
-                    <div class="mb-3">
-                        <label class="form-label">Name</label>
-                        <input type="text" class="form-control" id="department-name">
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Description</label>
-                        <input type="text" class="form-control" id="department-description">
-                    </div>
-                    <div class="text-center">
-                        <button class="btn btn-primary me-2" onclick="saveDepartment()">Save</button>
-                        <button class="btn btn-secondary" onclick="showSection('departments')">Cancel</button>
-                    </div>
-                </div>
-            </div>
-        </div> -->
+  <div *ngIf="!loading && departments.length === 0 && !error" class="alert alert-info">
+    No departments found.
+  </div>
+</div>

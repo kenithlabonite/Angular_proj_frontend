@@ -1,0 +1,57 @@
+<!-- src/app/requests/request-edit.component.html -->
+<div class="container mt-4">
+  <h3 *ngIf="id">Edit Request</h3>
+  <h3 *ngIf="!id">Add Request</h3>
+
+  <div *ngIf="loading" class="alert alert-info">Loading…</div>
+  <div *ngIf="error" class="alert alert-danger">{{ error }}</div>
+
+  <form [formGroup]="form" (ngSubmit)="save()" *ngIf="!loading">
+    <!-- Type -->
+    <div class="mb-3">
+      <label class="form-label">Type</label>
+      <select class="form-select" formControlName="type">
+        <option value="">-- Select Type --</option>
+        <option *ngFor="let t of allowedTypes" [value]="t">
+          {{ t | titlecase }}
+        </option>
+      </select>
+    </div>
+
+    <!-- Employee Dropdown -->
+    <div class="mb-3">
+      <label class="form-label">Employee</label>
+      <select class="form-select" formControlName="employeeId">
+        <option value="">-- Select Employee --</option>
+        <option *ngFor="let e of employees" [value]="e.id">
+          {{ e.displayName }}
+        </option>
+      </select>
+    </div>
+
+    <!-- Items -->
+    <div class="mb-3">
+      <label class="form-label">Items</label>
+      <div formArrayName="items">
+        <div *ngFor="let item of items.controls; let i = index" [formGroupName]="i" class="row g-2 mb-2">
+          <div class="col">
+            <input class="form-control" formControlName="name" placeholder="Name">
+          </div>
+          <div class="col-3">
+            <input type="number" class="form-control" formControlName="quantity" min="1">
+          </div>
+          <div class="col-auto">
+            <button type="button" class="btn btn-danger" (click)="removeItem(i)">Remove</button>
+          </div>
+        </div>
+      </div>
+      <button type="button" class="btn btn-secondary mt-2" (click)="addItem()">Add Item</button>
+    </div>
+
+    <!-- Actions -->
+    <div class="mt-3">
+      <button type="submit" class="btn btn-primary me-2">Save</button>
+      <button type="button" class="btn btn-secondary" (click)="cancel()">Cancel</button>
+    </div>
+  </form>
+</div>

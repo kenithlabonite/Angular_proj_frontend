@@ -1,0 +1,52 @@
+<div class="p-4">
+  <div class="container">
+    <div class="mt-4">
+      <h2>Requests</h2>
+
+      <table class="table table-bordered table-striped" *ngIf="requests.length > 0; else noRequests">
+        <thead>
+          <tr>
+            <th>Type</th>
+            <th>Employee</th>
+            <th>Items</th>
+            <th>Status</th>
+            <th style="width: 150px;">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let r of requests">
+            <td>{{ r.type }}</td>
+            <td>{{ r.employeeDisplay }}</td> <!-- ✅ uses normalized field -->
+            <td>
+              <ul class="mb-0">
+                <li *ngFor="let it of r.itemsDisplay">
+                  {{ it.name }}
+                  <span *ngIf="it.quantity"> (x{{ it.quantity }})</span>
+                </li>
+              </ul>
+            </td>
+            <td>
+              <span class="badge" [ngClass]="r.status === 'Approved' ? 'bg-success' : 'bg-secondary'">
+                {{ r.status }}
+              </span>
+            </td>
+            <td>
+              <button class="btn btn-sm btn-primary me-2" (click)="edit(r.id)">Edit</button>
+              <button class="btn btn-sm btn-danger" (click)="delete(r.id)">Delete</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <ng-template #noRequests>
+        <div *ngIf="!loading" class="alert alert-secondary mt-3">
+          No requests found.
+        </div>
+      </ng-template>
+
+      <div class="text-end mt-3">
+        <button class="btn btn-success" (click)="add()">Add Request</button>
+      </div>
+    </div>
+  </div>
+</div>
