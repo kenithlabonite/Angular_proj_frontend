@@ -1,23 +1,35 @@
-<div class="modal fade show d-block" tabindex="-1">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title">
-          Transfer Employee: {{ employee?.EmployeeID }}
-        </h5>
-        <button type="button" class="btn-close" (click)="close()"></button>
-      </div>
-      <div class="modal-body">
-        <label class="form-label">Department</label>
-        <select class="form-select" [(ngModel)]="selectedDepartment" name="department">
-            <option *ngFor="let dept of departments" [value]="dept">{{ dept }}</option>
-        </select>
-      </div>
-      <div class="modal-footer">
-        <button class="btn btn-warning" (click)="confirmTransfer()">Transfer</button>
-        <button class="btn btn-secondary" (click)="close()">Cancel</button>
-      </div>
+<div *ngIf="isOpen"
+     style="position: fixed; inset: 0; background: rgba(0,0,0,0.5);
+            display: flex; align-items: center; justify-content: center; z-index: 1050;"
+     (click)="close()">
+
+  <div style="background: #fff; border-radius: 6px; width: 400px; max-width: 95%;
+              box-shadow: 0 0.5rem 1rem rgba(0,0,0,.15); display: flex; flex-direction: column;"
+       (click)="$event.stopPropagation()">
+
+    <!-- Header -->
+    <div style="display: flex; justify-content: space-between; align-items: center;
+                padding: 1rem; border-bottom: 1px solid #dee2e6;">
+      <h5 style="margin: 0;">Transfer Employee: {{ employee?.EmployeeID }}</h5>
+      <button type="button" class="btn-close" (click)="close()"></button>
+    </div>
+
+    <!-- Body -->
+    <div style="padding: 1rem;">
+      <label class="form-label">Department</label>
+      <select [(ngModel)]="selectedDepartmentId" class="form-select">
+        <option *ngFor="let dept of departments" [value]="dept.id">
+          {{ dept.name }}
+        </option>
+      </select>
+    </div>
+
+    <!-- Footer -->
+    <div style="display: flex; justify-content: flex-end; gap: 0.5rem;
+                padding: 0.75rem 1rem; border-top: 1px solid #dee2e6;">
+      <button type="button" class="btn btn-warning"
+              (click)="transfer()" [disabled]="loading">Transfer</button>
+      <button type="button" class="btn btn-secondary" (click)="close()">Cancel</button>
     </div>
   </div>
 </div>
-<div class="modal-backdrop fade show"></div>

@@ -11,11 +11,13 @@
     <p class="text-muted">Welcome to the Employees section.</p>
 
     <!-- Employees Table -->
-    <table class="table table-striped mt-4" *ngIf="employees.length > 0; else noEmployees">
+    <table
+      class="table table-striped mt-4"
+      *ngIf="employees.length > 0; else noEmployees"
+    >
       <thead class="table-light">
         <tr>
           <th>Employee ID</th>
-          <th>Full Name</th>
           <th>Email</th>
           <th>Role</th>
           <th>Position</th>
@@ -28,30 +30,32 @@
       <tbody>
         <tr *ngFor="let emp of employees">
           <td>{{ emp.EmployeeID }}</td>
-          <td>{{ emp.firstName }} {{ emp.lastName }}</td>
           <td>{{ emp.email }}</td>
           <td>{{ emp.role }}</td>
           <td>{{ emp.position }}</td>
-          <td>{{ emp.department }}</td>
+          <td>{{ emp.departmentName }}</td>
           <td>{{ emp.hireDate | date: 'yyyy-MM-dd' }}</td>
           <td>
-            <span 
+            <span
               class="badge"
-              [ngClass]="emp.status === 'active' ? 'bg-success' : 'bg-secondary'">
+              [ngClass]="emp.status === 'active' ? 'bg-success' : 'bg-secondary'"
+            >
               {{ emp.status }}
             </span>
           </td>
           <td class="d-flex justify-content-center">
-            <button class="btn btn-sm btn-info me-1" routerLink="/requests">Requests</button>
-            <button class="btn btn-sm btn-info me-1" routerLink="/admin/accounts">Workflows</button>
-            <button class="btn btn-sm btn-warning me-1" [routerLink]="['/employees/transfer', emp.EmployeeID]">Transfer</button>
-
-            <button class="btn btn-sm btn-primary me-1" routerLink="/admin/accounts">Edit</button>
-            <!--
-            <button class="btn btn-sm btn-danger me-1" (click)="deleteEmployee(emp)">
-              Delete
+            <button class="btn btn-sm btn-info me-1" routerLink="/requests">
+              Requests
             </button>
-            -->
+            <button class="btn btn-sm btn-info me-1" routerLink="/admin/accounts">
+              Workflows
+            </button>
+            <button class="btn btn-sm btn-warning me-1" (click)="openTransfer(emp)">
+              Transfer
+            </button>
+            <button class="btn btn-sm btn-primary me-1" routerLink="/admin/accounts">
+              Edit
+            </button>
           </td>
         </tr>
       </tbody>
@@ -61,5 +65,30 @@
     <ng-template #noEmployees>
       <p class="text-muted mt-3">No active employees found.</p>
     </ng-template>
+  </div>
+</div>
+
+<!-- 🔔 Transfer Popup (Top-Center) -->
+<div *ngIf="transferVisible"
+     style="position: fixed; inset: 0; background: rgba(0,0,0,0.5);
+            display: flex; justify-content: center; align-items: flex-start;
+            padding-top: 80px; z-index: 1050;">
+  <div class="card shadow" style="width: 400px;">
+    <div class="card-header d-flex justify-content-between align-items-center">
+      <h5 class="mb-0">Transfer Employee: {{ selectedEmployee?.EmployeeID }}</h5>
+      <button type="button" class="btn-close" (click)="closeTransfer()"></button>
+    </div>
+    <div class="card-body">
+      <label class="form-label">Department</label>
+      <select [(ngModel)]="selectedDepartmentId" class="form-select mb-3">
+        <option *ngFor="let dept of departments" [value]="dept.id">
+          {{ dept.name || dept.departmentName }}
+        </option>
+      </select>
+      <div class="d-flex justify-content-end gap-2">
+        <button class="btn btn-warning" (click)="confirmTransfer()">Transfer</button>
+        <button class="btn btn-secondary" (click)="closeTransfer()">Cancel</button>
+      </div>
+    </div>
   </div>
 </div>

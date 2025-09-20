@@ -1,56 +1,130 @@
-import { Component, OnInit } from '@angular/core';
+// src/app/employee/employee-add.component.ts
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { Subscription, of } from 'rxjs';
+import { catchError } from 'rxjs/operators';
+
+import { EmployeeService, Employee } from '../_services/employee.service';
+import { AccountService } from '../_services/account.service';
+import { DepartmentService } from '../_services/department.service';
+import { Account } from '../_models';
 
 @Component({
   selector: 'app-employee-add',
-  standalone: true,                                // ✅ standalone
-  imports: [CommonModule, FormsModule],            // ✅ ngModel, *ngIf, *ngFor
+  standalone: true,
+  imports: [CommonModule, FormsModule],
   templateUrl: './employee-add.component.html'
 })
-export class EmployeeAddComponent implements OnInit {
-  employee: any = {
-    EmployeeID: null,
-    email: '',
+export class EmployeeAddComponent implements OnInit, OnDestroy {
+  employee: Partial<Employee> = {
+    EmployeeID: undefined,
+    accountId: undefined,
     position: '',
-    department: '',
+    departmentId: undefined, // ✅ store departmentId for backend
     hireDate: '',
-    status: 'active'                               // ✅ default status
+    status: 'active'
   };
 
-  accounts: any[] = [];
-  departments: any[] = [];
+  accounts: Account[] = [];
+  departments: Array<{ id: number; name: string }> = [];
 
-  constructor(private router: Router) {}
+  loading = false;
+  errorMessage = '';
+  private subs: Subscription[] = [];
+
+  constructor(
+    private router: Router,
+    private employeeService: EmployeeService,
+    private accountService: AccountService,
+    private departmentService: DepartmentService
+  ) {}
 
   ngOnInit(): void {
-    // TODO: Replace this with API call later (AccountService)
-    this.accounts = [
-      { id: 1, email: 'admin@example.com', firstName: 'Admin', lastName: 'User', status: 'active' },
-      { id: 2, email: 'user@example.com', firstName: 'Normal', lastName: 'User', status: 'inactive' },
-      { id: 3, email: 'staff@example.com', firstName: 'Staff', lastName: 'Member', status: 'active' }
-    ].filter(a => a.status === 'active');          // ✅ only active accounts
+    // ✅ Load accounts (only active)
+    const accSub = this.accountService.getAll().subscribe({
+      next: res => {
+        this.accounts = res.filter(a => a.status === 'active');
+      },
+      error: err => {
+        console.error('Failed to load accounts', err);
+        this.accounts = [];
+      }
+    });
+    this.subs.push(accSub);
 
-    this.departments = [
-      { id: 1, name: 'Engineering' },
-      { id: 2, name: 'Marketing' },
-      { id: 3, name: 'HR' }
-    ];
-  }
+    // ✅ Fetch next EmployeeID preview
+    const idSub = this.employeeService.getNextId().subscribe({
+      next: res => (this.employee.EmployeeID = res.nextId),
+      error: err => {
+        console.warn('Could not fetch next EmployeeID preview', err);
+        this.employee.EmployeeID = undefined;
+      }
+    });
+    this.subs.push(idSub);
 
-  // ✅ When user selects an account, set EmployeeID and email
-  onAccountChange(accountId: number): void {
-    const selectedAccount = this.accounts.find(a => a.id == accountId);
-    if (selectedAccount) {
-      this.employee.EmployeeID = selectedAccount.id;   // EmployeeID = Account.id
-      this.employee.email = selectedAccount.email;     // Email = Account.email
-    }
+    // ✅ Load departments from backend
+    const deptSub = this.departmentService
+      .getAll()
+      .pipe(
+        catchError(err => {
+          console.error('Failed to load departments', err);
+          this.errorMessage = 'Unable to load departments';
+          return of([]);
+        })
+      )
+      .subscribe(res => {
+        this.departments = (res || []).map((d: any) => ({
+          id: Number(d.id), // backend: "id"
+          name: d.departmentName // backend: "departmentName"
+        }));
+      });
+    this.subs.push(deptSub);
   }
 
   onSubmit(): void {
-    console.log('New Employee:', this.employee);
-    // TODO: Call employeeService.create(this.employee) when backend is ready
+    this.errorMessage = '';
+
+    if (!this.employee.accountId) {
+      this.errorMessage = 'Please select an account.';
+      return;
+    }
+    if (!this.employee.departmentId) {
+      this.errorMessage = 'Please select a department.';
+      return;
+    }
+
+    // ✅ Build payload to match backend model
+    const payload: Partial<Employee> = {
+      EmployeeID: this.employee.EmployeeID,
+      accountId: this.employee.accountId,
+      position: this.employee.position,
+      departmentId: this.employee.departmentId,
+      hireDate: this.employee.hireDate,
+      status: this.employee.status === 'inactive' ? 'inactive' : 'active'
+    };
+
+    this.loading = true;
+    this.employeeService.create(payload).subscribe({
+      next: () => {
+        this.loading = false;
+        this.router.navigate(['/employees']);
+      },
+      error: err => {
+        console.error('Create employee failed', err);
+        this.errorMessage =
+          err?.message || err?.error?.message || 'Emaill already exists.';
+        this.loading = false;
+      }
+    });
+  }
+
+  cancel(): void {
     this.router.navigate(['/employees']);
+  }
+
+  ngOnDestroy(): void {
+    this.subs.forEach(s => s.unsubscribe());
   }
 }
