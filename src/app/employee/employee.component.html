@@ -3,12 +3,9 @@
     <!-- Header -->
     <div class="d-flex justify-content-between align-items-center mb-3">
       <h1 class="mb-0">Employees</h1>
-      <a routerLink="/employees/add" class="btn btn-primary">
-        <i class="bi bi-person-plus"></i> Add Employee
-      </a>
     </div>
 
-    <p class="text-muted">Welcome to the Employees section.</p>
+    <p class="text">Welcome to the Employees section.</p>
 
     <!-- Employees Table -->
     <table
@@ -60,7 +57,11 @@
         </tr>
       </tbody>
     </table>
-
+<div class="text-end mt-3">
+    <a routerLink="/employees/add" class="btn btn-primary">
+        <i class="bi bi-person-plus"></i> Add Employee
+      </a>
+</div>
     <!-- Empty state -->
     <ng-template #noEmployees>
       <p class="text-muted mt-3">No active employees found.</p>
