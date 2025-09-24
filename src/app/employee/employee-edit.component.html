@@ -1,5 +1,5 @@
 <div class="container mt-4">
-  <h2>Add Employee</h2>
+  <h2>Edit Employee</h2>
 
   <form (ngSubmit)="onSubmit()" #employeeForm="ngForm">
     <!-- Employee ID -->
@@ -50,7 +50,6 @@
         <option value="Director">Director</option>
         <option value="Vice President / Executive Director">Vice President / Executive Director</option>
         <option value="President / C-level">President / C-level</option>
-        <!-- Add more positions as needed -->
       </select>
     </div>
 
@@ -63,9 +62,9 @@
         name="departmentId"
         required
       >
-        <option value="text-muted" disabled>----Select department----</option>
+        <option value="" disabled>----Select department----</option>
         <option *ngFor="let dept of departments" [ngValue]="dept.id">
-          {{ dept.name }}
+          {{ dept.departmentName }}
         </option>
       </select>
     </div>

@@ -4,16 +4,16 @@
   <form [formGroup]="form" (ngSubmit)="onSubmit()">
     <!-- Department Name -->
     <div class="mb-3">
-      <label for="name" class="form-label">Department Name</label>
+      <label for="departmentName" class="form-label">Department Name</label>
       <input
-        id="name"
+        id="departmentName"
         type="text"
-        formControlName="name"
+        formControlName="departmentName"
         class="form-control"
-        [ngClass]="{ 'is-invalid': form.get('name')?.touched && form.get('name')?.invalid }"
+        [ngClass]="{ 'is-invalid': submitted && f['departmentName'].invalid }"
       />
-      <div *ngIf="form.get('name')?.touched && form.get('name')?.invalid" class="invalid-feedback">
-        Name is required
+      <div *ngIf="submitted && f['departmentName'].invalid" class="invalid-feedback">
+        Department Name is required
       </div>
     </div>
 
@@ -31,7 +31,8 @@
     <!-- Actions -->
     <div class="mt-3">
       <button type="submit" class="btn btn-primary me-2" [disabled]="submitting">
-        {{ submitting ? 'Saving…' : (id ? 'Update' : 'Create') }}
+        <span *ngIf="submitting" class="spinner-border spinner-border-sm me-1"></span>
+        {{ id ? 'Update' : 'Create' }}
       </button>
       <a routerLink="/departments" class="btn btn-secondary">Cancel</a>
     </div>

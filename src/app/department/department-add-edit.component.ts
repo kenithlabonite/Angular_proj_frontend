@@ -1,9 +1,10 @@
 // src/app/department/department-add-edit.component.ts
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { DepartmentService, Department } from '@app/_services/department.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { first } from 'rxjs/operators';
+
+import { DepartmentService, Department } from '@app/_services/department.service';
 
 @Component({
   selector: 'app-department-add-edit',
@@ -14,6 +15,7 @@ export class DepartmentAddEditComponent implements OnInit {
   id?: string | number;
   loading = false;
   submitting = false;
+  submitted = false;   // 👈 add this
   title = 'Add Department';
 
   constructor(
@@ -27,15 +29,19 @@ export class DepartmentAddEditComponent implements OnInit {
     this.id = this.route.snapshot.params['id'];
 
     this.form = this.fb.group({
-      name: ['', Validators.required],
-      description: [''],
-      employeeCount: [''] // optional if backend supports it
+      departmentName: ['', Validators.required],
+      description: ['']
     });
 
     if (this.id) {
       this.title = 'Edit Department';
       this.loadDepartment();
     }
+  }
+
+  // 👇 add this getter so you can write f['departmentName'] in the template
+  get f() {
+    return this.form.controls;
   }
 
   private loadDepartment(): void {
@@ -46,9 +52,8 @@ export class DepartmentAddEditComponent implements OnInit {
         next: (d: Department) => {
           this.loading = false;
           this.form.patchValue({
-            name: d?.name ?? d?.Name ?? '',
-            description: d?.description ?? d?.Description ?? '',
-            employeeCount: d?.employeeCount ?? d?.EmployeeCount ?? ''
+            departmentName: d?.departmentName ?? '',
+            description: d?.description ?? ''
           });
         },
         error: () => {
@@ -59,20 +64,18 @@ export class DepartmentAddEditComponent implements OnInit {
   }
 
   onSubmit(): void {
+    this.submitted = true;  // 👈 mark as submitted so validation works
     if (this.form.invalid) return;
-    this.submitting = true;
 
+    this.submitting = true;
     const payload: Partial<Department> = {
-      name: this.form.value.name,
-      description: this.form.value.description,
-      ...(this.form.value.employeeCount !== '' 
-        ? { employeeCount: Number(this.form.value.employeeCount) } 
-        : {})
+      departmentName: this.f['departmentName'].value,
+      description: this.f['description'].value
     };
 
     const request$ = this.id
-      ? this.deptSvc.update(this.id, payload) // PUT /departments/:id
-      : this.deptSvc.create(payload);         // POST /departments
+      ? this.deptSvc.update(this.id, payload)
+      : this.deptSvc.create(payload);
 
     request$
       .pipe(first())

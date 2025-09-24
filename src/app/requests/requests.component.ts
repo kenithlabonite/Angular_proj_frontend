@@ -1,7 +1,6 @@
 // src/app/requests/requests.component.ts
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
-import { RequestService } from '../_services/request.service';
+import { RequestService } from '@app/_services/request.service';
 import { RequestDto, RequestView } from './request.model';
 
 @Component({
@@ -13,10 +12,7 @@ export class RequestsComponent implements OnInit {
   loading = false;
   error = '';
 
-  constructor(
-    private svc: RequestService,
-    private router: Router
-  ) {}
+  constructor(private requestSvc: RequestService) {}
 
   ngOnInit(): void {
     this.load();
@@ -24,11 +20,19 @@ export class RequestsComponent implements OnInit {
 
   load(): void {
     this.loading = true;
-    this.error = '';
-
-    this.svc.getAll().subscribe({
-      next: (res: RequestDto[]) => {
-        this.requests = (res || []).map(r => this.toView(r));
+    this.requestSvc.getAll().subscribe({
+      next: (list: RequestDto[]) => {
+        this.requests = list.map(r => ({
+          // ✅ make sure id is always mapped
+          id: r.id ?? (r as any).requestId ?? (r as any).RequestID ?? null,
+          type: r.type,
+          status: r.status,
+          employeeId: r.employeeId ?? r.employeeCode ?? '',
+          employeeDisplay: r.Account
+            ? `${r.Account.firstName ?? ''} ${r.Account.lastName ?? ''} (${r.Account.email ?? ''})`
+            : '—',
+          itemsDisplay: this.normalizeItems(r.items)
+        }));
         this.loading = false;
       },
       error: (err: any) => {
@@ -39,53 +43,11 @@ export class RequestsComponent implements OnInit {
     });
   }
 
-  private toView(r: RequestDto): RequestView {
-    // ✅ Normalize employee email
-    const employeeEmail = r.Account?.email ?? '—';
-
-    // ✅ Normalize items into an array
-    let itemsDisplay: Array<{ name?: string; quantity?: number }> = [];
-    if (r.items) {
-      try {
-        const parsed = typeof r.items === 'string' ? JSON.parse(r.items) : r.items;
-        if (Array.isArray(parsed)) {
-          itemsDisplay = parsed.map((it: any) => ({
-            name: it?.name ?? String(it),
-            quantity: it?.quantity
-          }));
-        } else if (parsed) {
-          itemsDisplay = [{ name: parsed.name ?? String(parsed), quantity: parsed.quantity }];
-        }
-      } catch {
-        itemsDisplay = [{ name: String(r.items) }];
-      }
-    }
-
-    return {
-      id: r.id,
-      type: r.type,
-      status: r.status,
-      employeeId: r.employeeId ?? r.employeeCode, // ✅ safe fallback
-      employeeDisplay: employeeEmail,
-      itemsDisplay
-    };
-  }
-
-  edit(id?: number): void {
-    if (id) {
-      this.router.navigate(['/requests/edit', id]);
-    }
-  }
-
-  add(): void {
-    this.router.navigate(['/requests/add']);
-  }
-
-  delete(id?: number): void {
+  delete(id: number): void {
     if (!id) return;
 
     if (confirm('Are you sure you want to delete this request?')) {
-      this.svc.delete(id).subscribe({
+      this.requestSvc.delete(id).subscribe({
         next: () => {
           this.requests = this.requests.filter(r => r.id !== id);
         },
@@ -95,5 +57,15 @@ export class RequestsComponent implements OnInit {
         }
       });
     }
+  }
+
+  private normalizeItems(raw: any): Array<{ name?: string; quantity?: number }> {
+    let parsed: any[] = [];
+    try {
+      parsed = typeof raw === 'string' ? JSON.parse(raw) : raw;
+    } catch {
+      parsed = [];
+    }
+    return Array.isArray(parsed) ? parsed : [];
   }
 }

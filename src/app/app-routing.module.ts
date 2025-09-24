@@ -12,24 +12,34 @@ const adminModule = () => import('./admin/admin.module').then(m => m.AdminModule
 const profileModule = () => import('./profile/profile.module').then(m => m.ProfileModule);
 const employeeModule = () => import('./employee/employee.module').then(m => m.EmployeeModule);
 const departmentModule = () => import('./department/department.module').then(m => m.DepartmentModule);
-const requestsModule = () => import('./requests/requests.module').then(m => m.RequestModule);
+const requestsModule = () => import('./requests/requests.module').then(m => m.RequestsModule);
+const workflowsModule = () => import('./workflows/workflows.module').then(m => m.WorkflowsModule);
 
-// Direct standalone component imports
+// Standalone component
 import { EmployeeTransferComponent } from './employee/employee-transfer.component';
 
 const routes: Routes = [
   { path: '', component: HomeComponent, canActivate: [AuthGuard] },
+
   { path: 'account', loadChildren: accountModule },
   { path: 'profile', loadChildren: profileModule, canActivate: [AuthGuard] },
-  { path: 'admin', loadChildren: adminModule, canActivate: [AuthGuard], data: { roles: [Role.Admin] } },
 
-  // Employees + Departments
+  {
+    path: 'admin',
+    loadChildren: adminModule,
+    canActivate: [AuthGuard],
+    data: { roles: [Role.Admin] }
+  },
+
   { path: 'employees', loadChildren: employeeModule, canActivate: [AuthGuard] },
   { path: 'employees/transfer/:id', component: EmployeeTransferComponent, canActivate: [AuthGuard] },
+
   { path: 'departments', loadChildren: departmentModule, canActivate: [AuthGuard] },
   { path: 'requests', loadChildren: requestsModule, canActivate: [AuthGuard] },
 
-  // Fallback route
+  // ✅ Workflows route
+  { path: 'workflows', loadChildren: workflowsModule, canActivate: [AuthGuard] },
+
   { path: '**', redirectTo: '' }
 ];
 

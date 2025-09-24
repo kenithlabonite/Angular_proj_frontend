@@ -1,8 +1,34 @@
 <div class="p-4">
   <div class="container">
+    <!-- ✅ Top-center Alert -->
+    <div *ngIf="alertMessage" class="d-flex justify-content-center mb-3">
+      <div
+        class="alert"
+        [ngClass]="alertType === 'success' ? 'alert-success' : 'alert-danger'"
+        role="alert"
+        style="max-width: 500px; text-align: center;"
+      >
+        {{ alertMessage }}
+      </div>
+    </div>
+
     <!-- Header -->
     <div class="d-flex justify-content-between align-items-center mb-3">
       <h1 class="mb-0">Employees</h1>
+
+      <!-- ✅ Filter Dropdown -->
+      <label for="employeeFilter" class="form-label visually-hidden">Filter Employees</label>
+      <select
+        id="employeeFilter"
+        title="Filter Employees"
+        class="form-select w-auto"
+        [(ngModel)]="filterStatus"
+        (change)="applyFilter()"
+      >
+        <option value="all">All Employees</option>
+        <option value="active">Active Only</option>
+        <option value="inactive">Inactive Only</option>
+      </select>
     </div>
 
     <p class="text">Welcome to the Employees section.</p>
@@ -10,7 +36,7 @@
     <!-- Employees Table -->
     <table
       class="table table-striped mt-4"
-      *ngIf="employees.length > 0; else noEmployees"
+      *ngIf="filteredEmployees.length > 0; else noEmployees"
     >
       <thead class="table-light">
         <tr>
@@ -25,7 +51,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let emp of employees">
+        <tr *ngFor="let emp of filteredEmployees">
           <td>{{ emp.EmployeeID }}</td>
           <td>{{ emp.email }}</td>
           <td>{{ emp.role }}</td>
@@ -35,7 +61,7 @@
           <td>
             <span
               class="badge"
-              [ngClass]="emp.status === 'active' ? 'bg-success' : 'bg-secondary'"
+              [ngClass]="emp.status === 'active' ? 'bg-success' : 'bg-danger'"
             >
               {{ emp.status }}
             </span>
@@ -44,44 +70,59 @@
             <button class="btn btn-sm btn-info me-1" routerLink="/requests">
               Requests
             </button>
-            <button class="btn btn-sm btn-info me-1" routerLink="/admin/accounts">
+            <button
+              class="btn btn-sm btn-info me-1"
+              [routerLink]="['/workflows']"
+              [queryParams]="{ employeeId: emp.EmployeeID }"
+            >
               Workflows
             </button>
-            <button class="btn btn-sm btn-warning me-1" (click)="openTransfer(emp)">
+            <button
+              class="btn btn-sm btn-warning me-1"
+              (click)="openTransfer(emp)"
+            >
               Transfer
             </button>
-            <button class="btn btn-sm btn-primary me-1" routerLink="/admin/accounts">
+            <button
+              class="btn btn-sm btn-primary me-1"
+              [routerLink]="['/employees/edit', emp.EmployeeID]"
+            >
               Edit
             </button>
           </td>
         </tr>
       </tbody>
     </table>
-<div class="text-end mt-3">
-    <a routerLink="/employees/add" class="btn btn-primary">
+
+    <!-- Add Employee -->
+    <div class="text-end mt-3">
+      <a routerLink="/employees/add" class="btn btn-primary">
         <i class="bi bi-person-plus"></i> Add Employee
       </a>
-</div>
-    <!-- Empty state -->
+    </div>
+
+    <!-- Empty -->
     <ng-template #noEmployees>
-      <p class="text-muted mt-3">No active employees found.</p>
+      <p class="text-muted mt-3">No employees found.</p>
     </ng-template>
   </div>
 </div>
 
-<!-- 🔔 Transfer Popup (Top-Center) -->
-<div *ngIf="transferVisible"
-     style="position: fixed; inset: 0; background: rgba(0,0,0,0.5);
-            display: flex; justify-content: center; align-items: flex-start;
-            padding-top: 80px; z-index: 1050;">
-  <div class="card shadow" style="width: 400px;">
+<!-- ✅ Transfer Popup -->
+<div *ngIf="transferVisible" class="transfer-popup-overlay">
+  <div class="card shadow transfer-card">
     <div class="card-header d-flex justify-content-between align-items-center">
       <h5 class="mb-0">Transfer Employee: {{ selectedEmployee?.EmployeeID }}</h5>
-      <button type="button" class="btn-close" (click)="closeTransfer()"></button>
+      <button type="button" class="btn-close" (click)="closeTransfer()" title="Close" aria-label="Close"></button>
     </div>
     <div class="card-body">
-      <label class="form-label">Department</label>
-      <select [(ngModel)]="selectedDepartmentId" class="form-select mb-3">
+      <label for="departmentSelect" class="form-label">Department</label>
+      <select
+        id="departmentSelect"
+        title="Select Department"
+        [(ngModel)]="selectedDepartmentId"
+        class="form-select mb-3"
+      >
         <option *ngFor="let dept of departments" [value]="dept.id">
           {{ dept.name || dept.departmentName }}
         </option>

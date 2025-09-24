@@ -1,0 +1,35 @@
+<div class="container mt-4">
+  <h2 *ngIf="!employeeId">All Workflows</h2>
+  <h2 *ngIf="employeeId">Workflows for Employee {{ employeeId }}</h2>
+
+  <div *ngIf="loading" class="alert alert-info">Loading workflows...</div>
+  <div *ngIf="error" class="alert alert-danger">{{ error }}</div>
+
+  <table *ngIf="!loading && workflows.length > 0" class="table table-striped mt-3">
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Employee</th>
+      <th>Type</th>
+      <th>Details</th>
+      <th>Status</th>
+      <th>Created At</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let wf of workflows">
+      <td>{{ wf.id }}</td>
+      <td>{{ wf.employeeId }}</td>
+      <td>{{ wf.type }}</td>
+      <td>{{ wf.details }}</td> <!-- ✅ always plain string -->
+      <td>{{ wf.status }}</td>
+      <td>{{ wf.createdAt | date:'short' }}</td>
+    </tr>
+  </tbody>
+</table>
+
+
+  <div *ngIf="!loading && workflows.length === 0" class="alert alert-warning">
+    No workflows found.
+  </div>
+</div>

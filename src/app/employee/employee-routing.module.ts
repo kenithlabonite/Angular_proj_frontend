@@ -3,15 +3,16 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { EmployeeComponent } from './employee.component';
 import { EmployeeAddComponent } from './employee-add.component';
+import { EmployeeEditComponent } from './employee-edit.component'; // ✅ import edit
 
 const routes: Routes = [
   { path: '', component: EmployeeComponent },
   { path: 'add', component: EmployeeAddComponent },
-  // { path: 'edit/:id', component: EmployeeEditComponent }  <-- add later
+  { path: 'edit/:id', component: EmployeeEditComponent } // ✅ enable edit
 ];
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule]
 })
-export class EmployeeRoutingModule {}   // ✅ correct export
+export class EmployeeRoutingModule {}

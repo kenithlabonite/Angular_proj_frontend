@@ -1,10 +1,9 @@
 <div class="container mt-4">
-  <h3>Edit Request</h3>
+  <h1>Add Request</h1>
 
-  <div *ngIf="loading" class="alert alert-info">Loading…</div>
   <div *ngIf="error" class="alert alert-danger">{{ error }}</div>
 
-  <form [formGroup]="form" (ngSubmit)="save()" *ngIf="!loading">
+  <form [formGroup]="form" (ngSubmit)="save()">
     <!-- Type -->
     <div class="mb-3">
       <label class="form-label">Type</label>
@@ -33,7 +32,7 @@
       <div formArrayName="items">
         <div *ngFor="let item of items.controls; let i = index" [formGroupName]="i" class="row g-2 mb-2">
           <div class="col">
-            <input class="form-control" formControlName="name" placeholder="Name" />
+            <input class="form-control" formControlName="name" placeholder="Item name" />
           </div>
           <div class="col-3">
             <input type="number" class="form-control" formControlName="quantity" min="1" />
@@ -48,14 +47,11 @@
 
     <!-- Actions -->
     <div class="mt-3">
-      <button type="submit" class="btn btn-primary me-2" [disabled]="submitting">
+      <button type="submit" class="btn btn-success" [disabled]="submitting">
         <span *ngIf="submitting" class="spinner-border spinner-border-sm me-1"></span>
-        Update
+        Create
       </button>
-      <button type="button" class="btn btn-secondary me-2" (click)="cancel()">Cancel</button>
-      <button type="button" class="btn btn-danger" (click)="delete()" [disabled]="submitting">
-        Delete
-      </button>
+      <button type="button" class="btn btn-secondary ms-2" (click)="cancel()">Cancel</button>
     </div>
   </form>
 </div>

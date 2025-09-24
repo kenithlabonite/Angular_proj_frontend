@@ -9,11 +9,12 @@ export interface RequestDto {
   status?: string;
   items?: any;
 
-  // ✅ Make these available so TS stops complaining
+  // legacy / optional mappings
   employeeId?: string;
   employeeCode?: string;
 
   Account?: {
+    id?: number;            // 👈 add this (backend sends it)
     email?: string;
     firstName?: string;
     lastName?: string;

@@ -1,19 +1,15 @@
-// src/app/requests/request-edit.component.ts
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, FormArray, Validators } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { RequestService } from '@app/_services/request.service';
 import { EmployeeService } from '@app/_services/employee.service';
-import { RequestDto } from './request.model';
 
 @Component({
-  selector: 'app-request-edit',
-  templateUrl: './request-edit.component.html'
+  selector: 'app-request-add',
+  templateUrl: './request-add.component.html'
 })
-export class RequestEditComponent implements OnInit {
+export class RequestAddComponent implements OnInit {
   form!: FormGroup;
-  id!: number;
-  loading = false;
   submitting = false;
   employees: any[] = [];
   allowedTypes = ['equipment', 'leave', 'resources'];
@@ -21,27 +17,20 @@ export class RequestEditComponent implements OnInit {
 
   constructor(
     private fb: FormBuilder,
-    private route: ActivatedRoute,
     private router: Router,
     private requestSvc: RequestService,
     private employeeSvc: EmployeeService
   ) {}
 
   ngOnInit(): void {
-    const idParam = this.route.snapshot.paramMap.get('id');
-    this.id = idParam ? Number(idParam) : 0;
-
     this.form = this.fb.group({
       accountId: ['', Validators.required],
       type: ['', Validators.required],
       status: ['pending'],
-      items: this.fb.array([])
+      items: this.fb.array([this.newItem()])
     });
 
     this.loadEmployees();
-    if (this.id) {
-      this.loadRequest();
-    }
   }
 
   private loadEmployees(): void {
@@ -53,35 +42,6 @@ export class RequestEditComponent implements OnInit {
         }));
       },
       error: err => console.error('Failed to load employees', err)
-    });
-  }
-
-  private loadRequest(): void {
-    this.loading = true;
-    this.requestSvc.getById(this.id).subscribe({
-      next: (res: RequestDto) => {
-        this.form.patchValue({
-          accountId: res.Account?.id ?? '',
-          type: res.type ?? '',
-          status: res.status ?? 'pending'
-        });
-
-        this.items.clear();
-        let parsed: any[] = [];
-        try {
-          parsed = typeof res.items === 'string' ? JSON.parse(res.items) : res.items;
-        } catch {
-          parsed = [];
-        }
-        parsed.forEach(it => this.items.push(this.newItem(it)));
-
-        this.loading = false;
-      },
-      error: err => {
-        console.error('Failed to load request', err);
-        this.error = 'Failed to load request';
-        this.loading = false;
-      }
     });
   }
 
@@ -114,28 +74,14 @@ export class RequestEditComponent implements OnInit {
       quantity: this.form.value.items.reduce((s: number, it: any) => s + (Number(it.quantity) || 0), 0)
     };
 
-    this.requestSvc.update(this.id, payload).subscribe({
+    this.requestSvc.create(payload).subscribe({
       next: () => this.router.navigate(['/requests']),
       error: err => {
-        console.error('Failed to update request', err);
-        this.error = 'Failed to update request';
+        console.error('Failed to create request', err);
+        this.error = 'Failed to create request';
         this.submitting = false;
       }
     });
-  }
-
-  delete(): void {
-    if (!this.id) return;
-    if (confirm('Are you sure you want to delete this request?')) {
-      this.requestSvc.delete(this.id).subscribe({
-        next: () => this.router.navigate(['/requests']),
-        error: err => {
-          console.error('Failed to delete request', err);
-          this.error = 'Failed to delete request';
-          this.submitting = false;
-        }
-      });
-    }
   }
 
   cancel(): void {

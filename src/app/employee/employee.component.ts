@@ -24,14 +24,22 @@ interface Employee {
 })
 export class EmployeeComponent implements OnInit {
   employees: Employee[] = [];
+  filteredEmployees: Employee[] = [];
   departments: any[] = [];
   loading = false;
   errorMessage = '';
 
-  // transfer popup state
+  // ✅ transfer popup state
   transferVisible = false;
   selectedEmployee: Employee | null = null;
   selectedDepartmentId: string | number | null = null;
+
+  // ✅ filter control
+  filterStatus: 'all' | 'active' | 'inactive' = 'all';
+
+  // ✅ alert state (replaces window.alert)
+  alertMessage: string | null = null;
+  alertType: 'success' | 'error' = 'success';
 
   constructor(
     private employeeService: EmployeeService,
@@ -57,14 +65,13 @@ export class EmployeeComponent implements OnInit {
         })
       )
       .subscribe((res: any[]) => {
-        this.employees = (res || [])
-          .map(e => this.mapEmployee(e))
-          .filter(emp => emp.status.toLowerCase() === 'active');
+        this.employees = (res || []).map(e => this.mapEmployee(e));
+        this.applyFilter();
         this.loading = false;
       });
   }
 
-  /** Load all departments */
+  /** Load departments */
   private loadDepartments(): void {
     this.departmentService.getAll().subscribe({
       next: res => (this.departments = res),
@@ -72,7 +79,7 @@ export class EmployeeComponent implements OnInit {
     });
   }
 
-  /** Map backend employee to view model */
+  /** Map backend → frontend */
   private mapEmployee(e: any): Employee {
     return {
       EmployeeID: e.EmployeeID ?? e.employeeCode ?? '',
@@ -84,15 +91,38 @@ export class EmployeeComponent implements OnInit {
       position: e.position ?? '',
       departmentName: e.Department?.departmentName ?? '—',
       hireDate: e.hireDate ?? '',
-      status: e.status ?? ''
+      status: e.status ?? 'active'
     };
+  }
+
+  /** Filter employees */
+  applyFilter(): void {
+    if (this.filterStatus === 'all') {
+      this.filteredEmployees = [...this.employees];
+    } else {
+      this.filteredEmployees = this.employees.filter(
+        emp => emp.status === this.filterStatus
+      );
+    }
+  }
+
+  /** Toggle employee status */
+  toggleStatus(emp: Employee): void {
+    const newStatus = emp.status === 'active' ? 'inactive' : 'active';
+    this.employeeService.update(emp.EmployeeID, { status: newStatus }).subscribe({
+      next: () => {
+        emp.status = newStatus;
+        this.applyFilter();
+        this.showAlert(`✅ Status updated to ${newStatus}`, 'success');
+      },
+      error: () => this.showAlert('❌ Failed to update status', 'error')
+    });
   }
 
   /** Open transfer popup */
   openTransfer(employee: Employee): void {
     this.selectedEmployee = employee;
 
-    // preselect current department
     const currentDept = this.departments.find(
       d =>
         d.name === employee.departmentName ||
@@ -112,7 +142,10 @@ export class EmployeeComponent implements OnInit {
 
   /** Confirm transfer */
   confirmTransfer(): void {
-    if (!this.selectedEmployee?.EmployeeID || !this.selectedDepartmentId) return;
+    if (!this.selectedEmployee?.EmployeeID || !this.selectedDepartmentId) {
+      this.showAlert('❌ Please select a department', 'error');
+      return;
+    }
 
     this.employeeService
       .update(this.selectedEmployee.EmployeeID, {
@@ -120,13 +153,21 @@ export class EmployeeComponent implements OnInit {
       })
       .subscribe({
         next: () => {
-          window.alert(
-            `✅ Employee ${this.selectedEmployee?.EmployeeID} transferred successfully`
+          this.showAlert(
+            `✅ Employee ${this.selectedEmployee?.EmployeeID} transferred successfully`,
+            'success'
           );
           this.closeTransfer();
           this.loadEmployees();
         },
-        error: () => window.alert('❌ Transfer failed')
+        error: () => this.showAlert('❌ Transfer failed', 'error')
       });
+  }
+
+  /** ✅ Show alert (top-center, auto-hide) */
+  private showAlert(message: string, type: 'success' | 'error') {
+    this.alertMessage = message;
+    this.alertType = type;
+    setTimeout(() => (this.alertMessage = null), 3000);
   }
 }

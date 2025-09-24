@@ -1,52 +1,80 @@
-<div class="p-4">
-  <div class="container">
-    <div class="mt-4">
-      <h2>Requests</h2>
+<div class="container mt-4">
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h1 class="mb-0">Requests</h1>
+  </div>
 
-      <table class="table table-bordered table-striped" *ngIf="requests.length > 0; else noRequests">
-        <thead>
-          <tr>
-            <th>Type</th>
-            <th>Employee</th>
-            <th>Items</th>
-            <th>Status</th>
-            <th style="width: 150px;">Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let r of requests">
-            <td>{{ r.type }}</td>
-            <td>{{ r.employeeDisplay }}</td> <!-- ✅ uses normalized field -->
-            <td>
-              <ul class="mb-0">
-                <li *ngFor="let it of r.itemsDisplay">
-                  {{ it.name }}
-                  <span *ngIf="it.quantity"> (x{{ it.quantity }})</span>
-                </li>
-              </ul>
-            </td>
-            <td>
-              <span class="badge" [ngClass]="r.status === 'Approved' ? 'bg-success' : 'bg-secondary'">
-                {{ r.status }}
-              </span>
-            </td>
-            <td>
-              <button class="btn btn-sm btn-primary me-2" (click)="edit(r.id)">Edit</button>
-              <button class="btn btn-sm btn-danger" (click)="delete(r.id)">Delete</button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+  <!-- Loading / Error -->
+  <div *ngIf="loading" class="alert alert-info">Loading…</div>
+  <div *ngIf="error" class="alert alert-danger">{{ error }}</div>
 
-      <ng-template #noRequests>
-        <div *ngIf="!loading" class="alert alert-secondary mt-3">
-          No requests found.
-        </div>
-      </ng-template>
+  <!-- Requests Table -->
+  <div *ngIf="requests.length && !loading">
+    <table class="table table-striped align-middle">
+      <thead class="table-light">
+        <tr>
+          <th>Type</th>
+          <th>Employee</th>
+          <th>Items</th>
+          <th>Status</th>
+          <th class="text-center">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let r of requests">
+          <td class="text-capitalize">{{ r.type }}</td>
+          <td>{{ r.employeeDisplay }}</td>
+          <td>
+            <ul class="list-unstyled mb-0">
+              <li *ngFor="let item of r.itemsDisplay">
+                {{ item.name }} <span class="text-muted">(x{{ item.quantity }})</span>
+              </li>
+            </ul>
+          </td>
+          <td>
+            <span
+              class="badge px-3 py-2 text-capitalize"
+              [ngClass]="{
+                'bg-success': r.status?.toLowerCase() === 'approved',
+                'bg-warning text-dark': r.status?.toLowerCase() === 'pending',
+                'bg-danger': r.status?.toLowerCase() === 'rejected' || r.status?.toLowerCase() === 'disapproved',
+                'bg-secondary': !r.status
+              }">
+              {{ r.status || '—' }}
+            </span>
+          </td>
+          <td class="text-center">
+            <!-- Edit button -->
+            <button
+              *ngIf="r.id"
+              class="btn btn-sm btn-primary me-2"
+              [routerLink]="['/requests/edit', r.id]">
+              <i class="bi bi-pencil-square"></i> Edit
+            </button>
 
-      <div class="text-end mt-3">
-        <button class="btn btn-primary" (click)="add()">Add Request</button>
-      </div>
+            <!-- Delete button -->
+            <button
+              class="btn btn-sm btn-danger"
+              (click)="delete(r.id!)">
+              <i class="bi bi-trash"></i> Delete
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- Add New Request Button at bottom-right -->
+    <div class="d-flex justify-content-end mt-3">
+      <button class="btn btn-success" routerLink="/requests/add">
+        + Add Request
+      </button>
     </div>
+  </div>
+
+  <!-- Empty State -->
+  <div *ngIf="!requests.length && !loading" class="text-center py-5 text-muted">
+    <p>No requests found.</p>
+    <button class="btn btn-success" routerLink="/requests/add">
+      + Add Request
+    </button>
   </div>
 </div>
