@@ -3,8 +3,8 @@
 <form *ngIf="!loading" [formGroup]="form" (ngSubmit)="onSubmit()">
   <div class="row">
     <div class="mb-3 col-2">
-      <label class="form-label">Title</label>
-      <select formControlName="title" class="form-select" [ngClass]="{ 'is-invalid': submitted && f.title.errors }">
+      <label class="form-label" for="titleSelect">Title</label>
+      <select id="titleSelect" formControlName="title" class="form-select" [ngClass]="{ 'is-invalid': submitted && f.title.errors }">
         <option value="">-- Select --</option>
         <option value="Mr">Mr</option>
         <option value="Mrs">Mrs</option>
@@ -16,14 +16,16 @@
     <div class="mb-3 col-5">
       <label class="form-label">First Name</label>
       <input type="text" formControlName="firstName" class="form-control"
-             [ngClass]="{ 'is-invalid': submitted && f.firstName.errors }" />
+             [ngClass]="{ 'is-invalid': submitted && f.firstName.errors }"
+             placeholder="Enter first name" title="First Name" />
       <div *ngIf="submitted && f.firstName.errors" class="invalid-feedback">First Name is required</div>
     </div>
 
     <div class="mb-3 col-5">
       <label class="form-label">Last Name</label>
       <input type="text" formControlName="lastName" class="form-control"
-             [ngClass]="{ 'is-invalid': submitted && f.lastName.errors }" />
+             [ngClass]="{ 'is-invalid': submitted && f.lastName.errors }"
+             placeholder="Enter last name" title="Last Name" />
       <div *ngIf="submitted && f.lastName.errors" class="invalid-feedback">Last Name is required</div>
     </div>
   </div>
@@ -31,7 +33,8 @@
   <div class="mb-3">
     <label class="form-label">Email</label>
     <input type="email" formControlName="email" class="form-control"
-           [ngClass]="{ 'is-invalid': submitted && f.email.errors }" />
+           [ngClass]="{ 'is-invalid': submitted && f.email.errors }"
+           placeholder="Enter email" title="Email" />
     <div *ngIf="submitted && f.email.errors" class="invalid-feedback">
       <span *ngIf="f.email.errors?.required">Email is required</span>
       <span *ngIf="f.email.errors?.email">Enter a valid email</span>
@@ -39,8 +42,8 @@
   </div>
 
   <div class="mb-3">
-    <label class="form-label">Role</label>
-    <select formControlName="role" class="form-select" [ngClass]="{ 'is-invalid': submitted && f.role.errors }">
+    <label class="form-label" for="roleSelect">Role</label>
+    <select id="roleSelect" title="Role" formControlName="role" class="form-select" [ngClass]="{ 'is-invalid': submitted && f.role.errors }">
       <option value="">-- Select Role --</option>
       <option value="Admin">Admin</option>
       <option value="User">User</option>
@@ -50,7 +53,7 @@
 
   <div class="mb-3">
     <label class="form-label">Status</label>
-    <select formControlName="status" class="form-select" [ngClass]="{ 'is-invalid': submitted && f.status.errors }">
+    <select formControlName="status" class="form-select" title="Status" [ngClass]="{ 'is-invalid': submitted && f.status.errors }">
       <option value="">-- Select Status --</option>
       <option value="active">Active</option>
       <option value="inactive">Inactive</option>
@@ -62,9 +65,10 @@
   <div class="mb-3">
     <label class="form-label">Password</label>
     <input type="password" formControlName="password" class="form-control"
-           [ngClass]="{ 'is-invalid': submitted && f.password.errors }" autocomplete="new-password" />
+           [ngClass]="{ 'is-invalid': submitted && f.password.errors }" autocomplete="new-password"
+           title="Password" placeholder="Enter password" />
     <div *ngIf="!isPasswordProvided()" class="form-text">
-      Leave blank to skip setting a password now.
+      Password and confirm password is required when adding a new account.
     </div>
     <div *ngIf="submitted && f.password.errors?.minlength" class="invalid-feedback">
       Password must be at least 6 characters.
@@ -75,7 +79,8 @@
   <div class="mb-3" *ngIf="isPasswordProvided()">
     <label class="form-label">Confirm Password</label>
     <input type="password" formControlName="confirmPassword" class="form-control"
-           [ngClass]="{ 'is-invalid': submitted && f.confirmPassword.errors }" autocomplete="new-password" />
+           [ngClass]="{ 'is-invalid': submitted && f.confirmPassword.errors }" autocomplete="new-password"
+           title="Confirm Password" placeholder="Confirm password" />
     <div *ngIf="submitted && f.confirmPassword.errors?.required" class="invalid-feedback">
       Please confirm the password.
     </div>

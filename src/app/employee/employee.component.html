@@ -42,7 +42,7 @@
         <tr>
           <th>Employee ID</th>
           <th>Email</th>
-          <th>Role</th>
+          <!-- <th>Role</th> -->
           <th>Position</th>
           <th>Department</th>
           <th>Hire Date</th>
@@ -54,7 +54,7 @@
         <tr *ngFor="let emp of filteredEmployees">
           <td>{{ emp.EmployeeID }}</td>
           <td>{{ emp.email }}</td>
-          <td>{{ emp.role }}</td>
+          <!-- <td>{{ emp.role }}</td> -->
           <td>{{ emp.position }}</td>
           <td>{{ emp.departmentName }}</td>
           <td>{{ emp.hireDate | date: 'yyyy-MM-dd' }}</td>

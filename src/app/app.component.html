@@ -1,20 +1,25 @@
 ﻿<div class="app-container" [ngClass]="{ 'bg-light': account }">
   <!-- Main Navigation -->
-  <nav class="navbar navbar-expand-lg navbar-dark bg-dark px-3 mb-4" *ngIf="account">
+  <nav
+    class="navbar navbar-expand-lg navbar-dark bg-success fixed-top px-3"
+    *ngIf="account"
+  >
     <div class="container-fluid">
       <!-- Left nav -->
       <div class="navbar-nav">
-        <a 
-          routerLink="/" 
-          routerLinkActive="active" 
-          [routerLinkActiveOptions]="{ exact: true }" 
-          class="nav-item nav-link">
+        <a
+          routerLink="/"
+          routerLinkActive="active"
+          [routerLinkActiveOptions]="{ exact: true }"
+          class="nav-item nav-link"
+        >
           Home
         </a>
-        <a 
-          routerLink="/profile" 
-          routerLinkActive="active" 
-          class="nav-item nav-link">
+        <a
+          routerLink="/profile"
+          routerLinkActive="active"
+          class="nav-item nav-link"
+        >
           Profile
         </a>
       </div>
@@ -22,39 +27,37 @@
       <!-- Right nav -->
       <div class="navbar-nav ms-auto">
         <!-- Admin-only -->
-        <a 
-          *ngIf="account.role === Role.Admin" 
-          routerLink="/admin/accounts" 
-          routerLinkActive="active" 
-          class="nav-item nav-link">
+        <a
+          *ngIf="account.role === Role.Admin"
+          routerLink="/admin/accounts"
+          routerLinkActive="active"
+          class="nav-item nav-link"
+        >
           Accounts
         </a>
 
         <!-- Shared links -->
-        <a 
-          routerLink="/employees" 
-          routerLinkActive="active" 
-          class="nav-item nav-link">
+        <a
+          routerLink="/employees"
+          routerLinkActive="active"
+          class="nav-item nav-link"
+        >
           Employees
         </a>
-        <a 
-          routerLink="/departments" 
-          routerLinkActive="active" 
-          class="nav-item nav-link">
+        <a
+          routerLink="/departments"
+          routerLinkActive="active"
+          class="nav-item nav-link"
+        >
           Departments
         </a>
-        <a 
-          routerLink="/requests" 
-          routerLinkActive="active" 
-          class="nav-item nav-link">
+        <a
+          routerLink="/requests"
+          routerLinkActive="active"
+          class="nav-item nav-link"
+        >
           Requests
         </a>
-        <!-- <a 
-          routerLink="/workflows" 
-          routerLinkActive="active" 
-          class="nav-item nav-link">
-          Workflows
-        </a> -->
 
         <!-- Logout -->
         <button (click)="logout()" class="btn btn-link nav-item nav-link">
@@ -64,12 +67,11 @@
     </div>
   </nav>
 
-  <!-- Subnav Router Outlet -->
-  <router-outlet name="subnav"></router-outlet>
+  <div class="container-fluid" style="padding-top: 70px;">
+    <router-outlet name="subnav"></router-outlet>
 
-  <!-- Global Alerts -->
-  <alert></alert>
+    <alert></alert>
 
-  <!-- Main Router Outlet -->
-  <router-outlet></router-outlet>
+    <router-outlet></router-outlet>
+  </div>
 </div>

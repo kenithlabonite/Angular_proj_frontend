@@ -4,20 +4,20 @@
 <table class="table table-striped">
     <thead>
         <tr>
-            <th style="width:10%">Title</th>
-            <th style="width:15%">First Name</th>
-            <th style="width:15%">Last Name</th>
+            <th style="width:5%">Title</th>
+            <th style="width:10%">First Name</th>
+            <th style="width:10%">Last Name</th>
             <th style="width:30%">Email</th>
             <th style="width:10%">Role</th>
-            <th style="width:10%">Status</th>
-            <th style="width:10%">Actions</th>
+            <th style="width:5%">Status</th>
+            <th style="width:0%">Actions</th>
         </tr>
     </thead>
     <tbody>
         <tr *ngFor="let account of accounts">
             <td class="align-middle">{{account.title}}</td>
-            <td class="align-middle">{{account.firstName}}</td>
-            <td class="align-middle">{{account.lastName}}</td>
+            <td class="align-middle">{{account.firstName | titlecase}}</td>
+            <td class="align-middle">{{account.lastName | titlecase}}</td>
             <td class="align-middle">{{account.email}}</td>
             <td class="align-middle">{{account.role}}</td>
             <td class="align-middle">

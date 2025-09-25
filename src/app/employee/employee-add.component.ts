@@ -3,7 +3,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Subscription, of } from 'rxjs';
+import { Subscription, of, forkJoin } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 
 import { EmployeeService, Employee } from '../_services/employee.service';
@@ -22,12 +22,13 @@ export class EmployeeAddComponent implements OnInit, OnDestroy {
     EmployeeID: undefined,
     accountId: undefined,
     position: '',
-    departmentId: undefined, // ✅ store departmentId for backend
+    departmentId: undefined, // store departmentId for backend
     hireDate: '',
     status: 'active'
   };
 
-  accounts: Account[] = [];
+  // use any[] because backend may return relation payloads that are not in Account model
+  accounts: any[] = [];
   departments: Array<{ id: number; name: string }> = [];
 
   loading = false;
@@ -42,21 +43,53 @@ export class EmployeeAddComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    // ✅ Load accounts (only active)
-    const accSub = this.accountService.getAll().subscribe({
-      next: res => {
-        this.accounts = res.filter(a => a.status === 'active');
+    // load accounts + employees in parallel, then filter accounts that are already used
+    const comboSub = forkJoin({
+      accounts: this.accountService.getAll().pipe(
+        catchError(err => {
+          console.error('Failed to load accounts', err);
+          return of([]);
+        })
+      ),
+      employees: this.employeeService.getAll().pipe(
+        catchError(err => {
+          console.error('Failed to load employees', err);
+          return of([]);
+        })
+      )
+    }).subscribe(
+      ({ accounts, employees }: { accounts: any[]; employees: any[] }) => {
+        try {
+          // build set of accountIds already used by employees
+          const usedAccountIds = new Set(
+            (employees || [])
+              .map(e => e.accountId)
+              .filter(id => id !== undefined && id !== null)
+          );
+
+          // filter accounts: must be active and not used
+          this.accounts = (accounts || []).filter((a: any) => {
+            if (!a) return false;
+            // If backend attached Employee relation directly to account, also exclude
+            const hasEmployeeRelation = !!(a.Employee && (Array.isArray(a.Employee) ? a.Employee.length > 0 : true));
+            return a.status === 'active' && !usedAccountIds.has(a.id) && !hasEmployeeRelation;
+          });
+        } catch (err) {
+          console.error('Error filtering accounts', err);
+          // fallback: show only active accounts
+          this.accounts = (accounts || []).filter((a: any) => a && a.status === 'active');
+        }
       },
-      error: err => {
-        console.error('Failed to load accounts', err);
+      err => {
+        console.error('Failed to load accounts/employees', err);
         this.accounts = [];
       }
-    });
-    this.subs.push(accSub);
+    );
+    this.subs.push(comboSub);
 
-    // ✅ Fetch next EmployeeID preview
+    // Fetch next EmployeeID preview
     const idSub = this.employeeService.getNextId().subscribe({
-      next: res => (this.employee.EmployeeID = res.nextId),
+      next: res => (this.employee.EmployeeID = res?.nextId),
       error: err => {
         console.warn('Could not fetch next EmployeeID preview', err);
         this.employee.EmployeeID = undefined;
@@ -64,7 +97,7 @@ export class EmployeeAddComponent implements OnInit, OnDestroy {
     });
     this.subs.push(idSub);
 
-    // ✅ Load departments from backend
+    // Load departments
     const deptSub = this.departmentService
       .getAll()
       .pipe(
@@ -76,8 +109,8 @@ export class EmployeeAddComponent implements OnInit, OnDestroy {
       )
       .subscribe(res => {
         this.departments = (res || []).map((d: any) => ({
-          id: Number(d.id), // backend: "id"
-          name: d.departmentName // backend: "departmentName"
+          id: Number(d.id),
+          name: d.departmentName
         }));
       });
     this.subs.push(deptSub);
@@ -95,7 +128,7 @@ export class EmployeeAddComponent implements OnInit, OnDestroy {
       return;
     }
 
-    // ✅ Build payload to match backend model
+    // Build payload to match backend model
     const payload: Partial<Employee> = {
       EmployeeID: this.employee.EmployeeID,
       accountId: this.employee.accountId,
@@ -114,7 +147,7 @@ export class EmployeeAddComponent implements OnInit, OnDestroy {
       error: err => {
         console.error('Create employee failed', err);
         this.errorMessage =
-          err?.message || err?.error?.message || 'Emaill already exists.';
+          err?.message || err?.error?.message || 'Failed to create employee.';
         this.loading = false;
       }
     });

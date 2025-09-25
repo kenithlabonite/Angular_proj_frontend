@@ -306,7 +306,7 @@ SOFTWARE.
 
 ================================================================================
 File: package.json
-Size: 1.48 kB
+Size: 1.51 kB
 ================================================================================
 
 {
@@ -332,6 +332,7 @@ Size: 1.48 kB
         "@angular/router": "^15.0.0",
         "folder2txt": "^1.0.2",
         "rxjs": "~7.5.0",
+        "sweetalert2": "^11.23.0",
         "tslib": "^2.3.0",
         "zone.js": "~0.12.0"
     },
@@ -1690,7 +1691,7 @@ export class SubNavComponent { }
 
 ================================================================================
 File: src\app\app-routing.module.ts
-Size: 1.97 kB
+Size: 2.06 kB
 ================================================================================
 
 // src/app/app-routing.module.ts
@@ -1707,34 +1708,34 @@ const adminModule = () => import('./admin/admin.module').then(m => m.AdminModule
 const profileModule = () => import('./profile/profile.module').then(m => m.ProfileModule);
 const employeeModule = () => import('./employee/employee.module').then(m => m.EmployeeModule);
 const departmentModule = () => import('./department/department.module').then(m => m.DepartmentModule);
-const requestsModule = () => import('./requests/requests.module').then(m => m.RequestsModule); // 👈 FIXED
+const requestsModule = () => import('./requests/requests.module').then(m => m.RequestsModule);
+const workflowsModule = () => import('./workflows/workflows.module').then(m => m.WorkflowsModule);
 
 // Standalone component
 import { EmployeeTransferComponent } from './employee/employee-transfer.component';
 
 const routes: Routes = [
-  // Home
   { path: '', component: HomeComponent, canActivate: [AuthGuard] },
 
-  // Accounts & Profile
   { path: 'account', loadChildren: accountModule },
   { path: 'profile', loadChildren: profileModule, canActivate: [AuthGuard] },
 
-  // Admin
-  { 
-    path: 'admin', 
-    loadChildren: adminModule, 
-    canActivate: [AuthGuard], 
-    data: { roles: [Role.Admin] } 
+  {
+    path: 'admin',
+    loadChildren: adminModule,
+    canActivate: [AuthGuard],
+    data: { roles: [Role.Admin] }
   },
 
-  // Employees + Departments
   { path: 'employees', loadChildren: employeeModule, canActivate: [AuthGuard] },
   { path: 'employees/transfer/:id', component: EmployeeTransferComponent, canActivate: [AuthGuard] },
+
   { path: 'departments', loadChildren: departmentModule, canActivate: [AuthGuard] },
   { path: 'requests', loadChildren: requestsModule, canActivate: [AuthGuard] },
 
-  // Wildcard / fallback
+  // ✅ Workflows route
+  { path: 'workflows', loadChildren: workflowsModule, canActivate: [AuthGuard] },
+
   { path: '**', redirectTo: '' }
 ];
 
@@ -1747,35 +1748,83 @@ export class AppRoutingModule {}
 
 ================================================================================
 File: src\app\app.component.html
-Size: 1.54 kB
+Size: 2.02 kB
 ================================================================================
 
 ﻿<div class="app-container" [ngClass]="{ 'bg-light': account }">
-    <!-- main nav -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark px-3 mb-4" *ngIf="account">
-        <div class="navbar-nav">
-            <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" class="nav-item nav-link">Home</a>
-            <a routerLink="/profile" routerLinkActive="active" class="nav-item nav-link">Profile</a>
-        </div>
-        <div class="navbar-nav ms-auto">
-            <a *ngIf="account.role === Role.Admin" routerLink="/admin/accounts" routerLinkActive="active" class="nav-item nav-link">Accounts</a>
-            <!-- <a routerLink="accounts" routerLinkActive="active" class="nav-item nav-link">Accounts</a> -->
-            <!-- <a routerLink="/account" routerLinkActive="active" class="nav-item nav-link">Account</a> -->
-            <a routerLink="/employees" routerLinkActive="active" class="nav-item nav-link">Employees</a>
-            <a routerLink="/departments" routerLinkActive="active" class="nav-item nav-link">Departments</a>
-            <a routerLink="/requests" routerLinkActive="active" class="nav-item nav-link">Requests</a>
-            <button (click)="logout()" class="btn btn-link nav-item nav-link">Logout</button>
-        </div>
-    </nav>
+  <!-- Main Navigation -->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark px-3 mb-4" *ngIf="account">
+    <div class="container-fluid">
+      <!-- Left nav -->
+      <div class="navbar-nav">
+        <a 
+          routerLink="/" 
+          routerLinkActive="active" 
+          [routerLinkActiveOptions]="{ exact: true }" 
+          class="nav-item nav-link">
+          Home
+        </a>
+        <a 
+          routerLink="/profile" 
+          routerLinkActive="active" 
+          class="nav-item nav-link">
+          Profile
+        </a>
+      </div>
 
-    <!-- subnav router outlet -->
-    <router-outlet name="subnav"></router-outlet>
+      <!-- Right nav -->
+      <div class="navbar-nav ms-auto">
+        <!-- Admin-only -->
+        <a 
+          *ngIf="account.role === Role.Admin" 
+          routerLink="/admin/accounts" 
+          routerLinkActive="active" 
+          class="nav-item nav-link">
+          Accounts
+        </a>
 
-    <!-- global alert -->
-    <alert></alert>
+        <!-- Shared links -->
+        <a 
+          routerLink="/employees" 
+          routerLinkActive="active" 
+          class="nav-item nav-link">
+          Employees
+        </a>
+        <a 
+          routerLink="/departments" 
+          routerLinkActive="active" 
+          class="nav-item nav-link">
+          Departments
+        </a>
+        <a 
+          routerLink="/requests" 
+          routerLinkActive="active" 
+          class="nav-item nav-link">
+          Requests
+        </a>
+        <!-- <a 
+          routerLink="/workflows" 
+          routerLinkActive="active" 
+          class="nav-item nav-link">
+          Workflows
+        </a> -->
 
-    <!-- main router outlet -->
-    <router-outlet></router-outlet>
+        <!-- Logout -->
+        <button (click)="logout()" class="btn btn-link nav-item nav-link">
+          Logout
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Subnav Router Outlet -->
+  <router-outlet name="subnav"></router-outlet>
+
+  <!-- Global Alerts -->
+  <alert></alert>
+
+  <!-- Main Router Outlet -->
+  <router-outlet></router-outlet>
 </div>
 
 
@@ -2168,9 +2217,10 @@ export class DepartmentModule {}
 
 ================================================================================
 File: src\app\employee\employee-add.component.html
-Size: 2.75 kB
+Size: 3.85 kB
 ================================================================================
 
+<!-- src/app/employee/employee-add.component.html -->
 <div class="container mt-4">
   <h2>Add Employee</h2>
 
@@ -2183,7 +2233,6 @@ Size: 2.75 kB
         class="form-control"
         [(ngModel)]="employee.EmployeeID"
         name="EmployeeID"
-        
         disabled
       />
     </div>
@@ -2197,7 +2246,13 @@ Size: 2.75 kB
         name="accountId"
         required
       >
-        <option value="" disabled selected>Select account</option>
+        <option [ngValue]="undefined" disabled>Select account</option>
+
+        <!-- when there are no available accounts, show a disabled info option -->
+        <option *ngIf="accounts.length === 0" [ngValue]="undefined" disabled>
+          No available accounts
+        </option>
+
         <option *ngFor="let acc of accounts" [ngValue]="acc.id">
           {{ acc.firstName }} {{ acc.lastName }} ({{ acc.email }})
         </option>
@@ -2207,13 +2262,24 @@ Size: 2.75 kB
     <!-- Position -->
     <div class="mb-3">
       <label class="form-label">Position</label>
-      <input
-        type="text"
-        class="form-control"
+      <select
+        class="form-select"
         [(ngModel)]="employee.position"
         name="position"
         required
-      />
+      >
+        <option value="" disabled>Select position</option>
+        <option value="Intern / Trainee">Intern / Trainee</option>
+        <option value="Assistant / Junior">Assistant / Junior</option>
+        <option value="Staff / Associate">Staff / Associate</option>
+        <option value="Specialist / Senior">Specialist / Senior</option>
+        <option value="Supervisor / Team Lead">Supervisor / Team Lead</option>
+        <option value="Manager">Manager</option>
+        <option value="Senior Manager / Department Head">Senior Manager / Department Head</option>
+        <option value="Director">Director</option>
+        <option value="Vice President / Executive Director">Vice President / Executive Director</option>
+        <option value="President / C-level">President / C-level</option>
+      </select>
     </div>
 
     <!-- Department -->
@@ -2225,262 +2291,10 @@ Size: 2.75 kB
         name="departmentId"
         required
       >
-        <option value="" disabled selected>Select department</option>
+        <option [ngValue]="undefined" disabled>----Select department----</option>
         <option *ngFor="let dept of departments" [ngValue]="dept.id">
           {{ dept.name }}
         </option>
-      </select>
-    </div>
-
-    <!-- Hire Date -->
-    <div class="mb-3">
-      <label class="form-label">Hire Date</label>
-      <input
-        type="date"
-        class="form-control"
-        [(ngModel)]="employee.hireDate"
-        name="hireDate"
-        required
-      />
-    </div>
-
-    <!-- Status -->
-    <div class="mb-3">
-      <label class="form-label">Status</label>
-      <select
-        class="form-select"
-        [(ngModel)]="employee.status"
-        name="status"
-        required
-      >
-        <option value="active">Active</option>
-        <option value="inactive">Inactive</option>
-      </select>
-    </div>
-
-    <!-- Error -->
-    <div *ngIf="errorMessage" class="alert alert-danger">
-      {{ errorMessage }}
-    </div>
-
-    <!-- Buttons -->
-     <div class="text-center">
-    <button
-      type="submit"
-      class="btn btn-primary"
-      [disabled]="loading || !employeeForm.form.valid"
-    >
-      {{ loading ? 'Saving...' : 'Save' }}
-    </button>
-    <button type="button" class="btn btn-secondary ms-2" (click)="cancel()">
-      Cancel
-    </button>
-    </div>
-  </form>
-</div>
-
-
-================================================================================
-File: src\app\employee\employee-add.component.ts
-Size: 3.98 kB
-================================================================================
-
-// src/app/employee/employee-add.component.ts
-import { Component, OnInit, OnDestroy } from '@angular/core';
-import { Router } from '@angular/router';
-import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
-import { Subscription, of } from 'rxjs';
-import { catchError } from 'rxjs/operators';
-
-import { EmployeeService, Employee } from '../_services/employee.service';
-import { AccountService } from '../_services/account.service';
-import { DepartmentService } from '../_services/department.service';
-import { Account } from '../_models';
-
-@Component({
-  selector: 'app-employee-add',
-  standalone: true,
-  imports: [CommonModule, FormsModule],
-  templateUrl: './employee-add.component.html'
-})
-export class EmployeeAddComponent implements OnInit, OnDestroy {
-  employee: Partial<Employee> = {
-    EmployeeID: undefined,
-    accountId: undefined,
-    position: '',
-    departmentId: undefined, // ✅ store departmentId for backend
-    hireDate: '',
-    status: 'active'
-  };
-
-  accounts: Account[] = [];
-  departments: Array<{ id: number; name: string }> = [];
-
-  loading = false;
-  errorMessage = '';
-  private subs: Subscription[] = [];
-
-  constructor(
-    private router: Router,
-    private employeeService: EmployeeService,
-    private accountService: AccountService,
-    private departmentService: DepartmentService
-  ) {}
-
-  ngOnInit(): void {
-    // ✅ Load accounts (only active)
-    const accSub = this.accountService.getAll().subscribe({
-      next: res => {
-        this.accounts = res.filter(a => a.status === 'active');
-      },
-      error: err => {
-        console.error('Failed to load accounts', err);
-        this.accounts = [];
-      }
-    });
-    this.subs.push(accSub);
-
-    // ✅ Fetch next EmployeeID preview
-    const idSub = this.employeeService.getNextId().subscribe({
-      next: res => (this.employee.EmployeeID = res.nextId),
-      error: err => {
-        console.warn('Could not fetch next EmployeeID preview', err);
-        this.employee.EmployeeID = undefined;
-      }
-    });
-    this.subs.push(idSub);
-
-    // ✅ Load departments from backend
-    const deptSub = this.departmentService
-      .getAll()
-      .pipe(
-        catchError(err => {
-          console.error('Failed to load departments', err);
-          this.errorMessage = 'Unable to load departments';
-          return of([]);
-        })
-      )
-      .subscribe(res => {
-        this.departments = (res || []).map((d: any) => ({
-          id: Number(d.id), // backend: "id"
-          name: d.departmentName // backend: "departmentName"
-        }));
-      });
-    this.subs.push(deptSub);
-  }
-
-  onSubmit(): void {
-    this.errorMessage = '';
-
-    if (!this.employee.accountId) {
-      this.errorMessage = 'Please select an account.';
-      return;
-    }
-    if (!this.employee.departmentId) {
-      this.errorMessage = 'Please select a department.';
-      return;
-    }
-
-    // ✅ Build payload to match backend model
-    const payload: Partial<Employee> = {
-      EmployeeID: this.employee.EmployeeID,
-      accountId: this.employee.accountId,
-      position: this.employee.position,
-      departmentId: this.employee.departmentId,
-      hireDate: this.employee.hireDate,
-      status: this.employee.status === 'inactive' ? 'inactive' : 'active'
-    };
-
-    this.loading = true;
-    this.employeeService.create(payload).subscribe({
-      next: () => {
-        this.loading = false;
-        this.router.navigate(['/employees']);
-      },
-      error: err => {
-        console.error('Create employee failed', err);
-        this.errorMessage =
-          err?.message || err?.error?.message || 'Emaill already exists.';
-        this.loading = false;
-      }
-    });
-  }
-
-  cancel(): void {
-    this.router.navigate(['/employees']);
-  }
-
-  ngOnDestroy(): void {
-    this.subs.forEach(s => s.unsubscribe());
-  }
-}
-
-
-================================================================================
-File: src\app\employee\employee-edit.component.html
-Size: 2.81 kB
-================================================================================
-
-<div class="container mt-4">
-  <h2>Edit Employee</h2>
-
-  <form (ngSubmit)="onSubmit()" #employeeForm="ngForm">
-    <!-- Employee ID -->
-    <div class="mb-3">
-      <label class="form-label">Employee ID</label>
-      <input
-        type="text"
-        class="form-control"
-        [(ngModel)]="employee.EmployeeID"
-        name="EmployeeID"
-        required
-        disabled
-      />
-    </div>
-
-    <!-- Account -->
-    <div class="mb-3">
-      <label class="form-label">Account</label>
-      <select
-        class="form-select"
-        [(ngModel)]="employee.accountId"
-        name="accountId"
-        required
-      >
-        <option value="" disabled>Select account</option>
-        <option *ngFor="let acc of accounts" [ngValue]="acc.id">
-          {{ acc.firstName }} {{ acc.lastName }} ({{ acc.email }})
-        </option>
-      </select>
-    </div>
-
-    <!-- Position -->
-    <div class="mb-3">
-      <label class="form-label">Position</label>
-      <input
-        type="text"
-        class="form-control"
-        [(ngModel)]="employee.position"
-        name="position"
-        required
-      />
-    </div>
-
-    <!-- Department (✅ editable, not disabled) -->
-    <div class="mb-3">
-      <label class="form-label">Department</label>
-      <select
-        class="form-select"
-        [(ngModel)]="employee.departmentId"
-        name="departmentId"
-        required
-      >
-        <option value="" disabled>Select department</option>
-        <option *ngFor="let dept of departments" [ngValue]="dept.id">
-            {{ dept.departmentName }}
-        </option>
-
       </select>
     </div>
 
@@ -2522,7 +2336,301 @@ Size: 2.81 kB
         class="btn btn-primary"
         [disabled]="loading || !employeeForm.form.valid"
       >
-        {{ loading ? 'Updating...' : 'Update' }}
+        {{ loading ? 'Saving...' : 'Save' }}
+      </button>
+      <button type="button" class="btn btn-secondary ms-2" (click)="cancel()">
+        Cancel
+      </button>
+    </div>
+  </form>
+</div>
+
+
+================================================================================
+File: src\app\employee\employee-add.component.ts
+Size: 5.4 kB
+================================================================================
+
+// src/app/employee/employee-add.component.ts
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Router } from '@angular/router';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { Subscription, of, forkJoin } from 'rxjs';
+import { catchError } from 'rxjs/operators';
+
+import { EmployeeService, Employee } from '../_services/employee.service';
+import { AccountService } from '../_services/account.service';
+import { DepartmentService } from '../_services/department.service';
+import { Account } from '../_models';
+
+@Component({
+  selector: 'app-employee-add',
+  standalone: true,
+  imports: [CommonModule, FormsModule],
+  templateUrl: './employee-add.component.html'
+})
+export class EmployeeAddComponent implements OnInit, OnDestroy {
+  employee: Partial<Employee> = {
+    EmployeeID: undefined,
+    accountId: undefined,
+    position: '',
+    departmentId: undefined, // store departmentId for backend
+    hireDate: '',
+    status: 'active'
+  };
+
+  // use any[] because backend may return relation payloads that are not in Account model
+  accounts: any[] = [];
+  departments: Array<{ id: number; name: string }> = [];
+
+  loading = false;
+  errorMessage = '';
+  private subs: Subscription[] = [];
+
+  constructor(
+    private router: Router,
+    private employeeService: EmployeeService,
+    private accountService: AccountService,
+    private departmentService: DepartmentService
+  ) {}
+
+  ngOnInit(): void {
+    // load accounts + employees in parallel, then filter accounts that are already used
+    const comboSub = forkJoin({
+      accounts: this.accountService.getAll().pipe(
+        catchError(err => {
+          console.error('Failed to load accounts', err);
+          return of([]);
+        })
+      ),
+      employees: this.employeeService.getAll().pipe(
+        catchError(err => {
+          console.error('Failed to load employees', err);
+          return of([]);
+        })
+      )
+    }).subscribe(
+      ({ accounts, employees }: { accounts: any[]; employees: any[] }) => {
+        try {
+          // build set of accountIds already used by employees
+          const usedAccountIds = new Set(
+            (employees || [])
+              .map(e => e.accountId)
+              .filter(id => id !== undefined && id !== null)
+          );
+
+          // filter accounts: must be active and not used
+          this.accounts = (accounts || []).filter((a: any) => {
+            if (!a) return false;
+            // If backend attached Employee relation directly to account, also exclude
+            const hasEmployeeRelation = !!(a.Employee && (Array.isArray(a.Employee) ? a.Employee.length > 0 : true));
+            return a.status === 'active' && !usedAccountIds.has(a.id) && !hasEmployeeRelation;
+          });
+        } catch (err) {
+          console.error('Error filtering accounts', err);
+          // fallback: show only active accounts
+          this.accounts = (accounts || []).filter((a: any) => a && a.status === 'active');
+        }
+      },
+      err => {
+        console.error('Failed to load accounts/employees', err);
+        this.accounts = [];
+      }
+    );
+    this.subs.push(comboSub);
+
+    // Fetch next EmployeeID preview
+    const idSub = this.employeeService.getNextId().subscribe({
+      next: res => (this.employee.EmployeeID = res?.nextId),
+      error: err => {
+        console.warn('Could not fetch next EmployeeID preview', err);
+        this.employee.EmployeeID = undefined;
+      }
+    });
+    this.subs.push(idSub);
+
+    // Load departments
+    const deptSub = this.departmentService
+      .getAll()
+      .pipe(
+        catchError(err => {
+          console.error('Failed to load departments', err);
+          this.errorMessage = 'Unable to load departments';
+          return of([]);
+        })
+      )
+      .subscribe(res => {
+        this.departments = (res || []).map((d: any) => ({
+          id: Number(d.id),
+          name: d.departmentName
+        }));
+      });
+    this.subs.push(deptSub);
+  }
+
+  onSubmit(): void {
+    this.errorMessage = '';
+
+    if (!this.employee.accountId) {
+      this.errorMessage = 'Please select an account.';
+      return;
+    }
+    if (!this.employee.departmentId) {
+      this.errorMessage = 'Please select a department.';
+      return;
+    }
+
+    // Build payload to match backend model
+    const payload: Partial<Employee> = {
+      EmployeeID: this.employee.EmployeeID,
+      accountId: this.employee.accountId,
+      position: this.employee.position,
+      departmentId: this.employee.departmentId,
+      hireDate: this.employee.hireDate,
+      status: this.employee.status === 'inactive' ? 'inactive' : 'active'
+    };
+
+    this.loading = true;
+    this.employeeService.create(payload).subscribe({
+      next: () => {
+        this.loading = false;
+        this.router.navigate(['/employees']);
+      },
+      error: err => {
+        console.error('Create employee failed', err);
+        this.errorMessage =
+          err?.message || err?.error?.message || 'Failed to create employee.';
+        this.loading = false;
+      }
+    });
+  }
+
+  cancel(): void {
+    this.router.navigate(['/employees']);
+  }
+
+  ngOnDestroy(): void {
+    this.subs.forEach(s => s.unsubscribe());
+  }
+}
+
+
+================================================================================
+File: src\app\employee\employee-edit.component.html
+Size: 3.56 kB
+================================================================================
+
+<div class="container mt-4">
+  <h2>Edit Employee</h2>
+
+  <form (ngSubmit)="onSubmit()" #employeeForm="ngForm">
+    <!-- Employee ID -->
+    <div class="mb-3">
+      <label class="form-label">Employee ID</label>
+      <input
+        type="text"
+        class="form-control"
+        [(ngModel)]="employee.EmployeeID"
+        name="EmployeeID"
+        disabled
+      />
+    </div>
+
+    <!-- Account -->
+    <div class="mb-3">
+      <label class="form-label">Account</label>
+      <select
+        class="form-select"
+        [(ngModel)]="employee.accountId"
+        name="accountId"
+        required
+      >
+        <option value="" disabled>Select account</option>
+        <option *ngFor="let acc of accounts" [ngValue]="acc.id">
+          {{ acc.firstName }} {{ acc.lastName }} ({{ acc.email }})
+        </option>
+      </select>
+    </div>
+
+    <!-- Position -->
+    <div class="mb-3">
+      <label class="form-label">Position</label>
+      <select
+        class="form-select"
+        [(ngModel)]="employee.position"
+        name="position"
+        required
+      >
+        <option value="" disabled>Select position</option>
+        <option value="Intern / Trainee">Intern / Trainee</option>
+        <option value="Assistant / Junior">Assistant / Junior</option>
+        <option value="Staff / Associate">Staff / Associate</option>
+        <option value="Specialist / Senior">Specialist / Senior</option>
+        <option value="Supervisor / Team Lead">Supervisor / Team Lead</option>
+        <option value="Manager">Manager</option>
+        <option value="Senior Manager / Department Head">Senior Manager / Department Head</option>
+        <option value="Director">Director</option>
+        <option value="Vice President / Executive Director">Vice President / Executive Director</option>
+        <option value="President / C-level">President / C-level</option>
+      </select>
+    </div>
+
+    <!-- Department -->
+    <div class="mb-3">
+      <label class="form-label">Department</label>
+      <select
+        class="form-select"
+        [(ngModel)]="employee.departmentId"
+        name="departmentId"
+        required
+      >
+        <option value="" disabled>----Select department----</option>
+        <option *ngFor="let dept of departments" [ngValue]="dept.id">
+          {{ dept.departmentName }}
+        </option>
+      </select>
+    </div>
+
+    <!-- Hire Date -->
+    <div class="mb-3">
+      <label class="form-label">Hire Date</label>
+      <input
+        type="date"
+        class="form-control"
+        [(ngModel)]="employee.hireDate"
+        name="hireDate"
+        required
+      />
+    </div>
+
+    <!-- Status -->
+    <div class="mb-3">
+      <label class="form-label">Status</label>
+      <select
+        class="form-select"
+        [(ngModel)]="employee.status"
+        name="status"
+        required
+      >
+        <option value="active">Active</option>
+        <option value="inactive">Inactive</option>
+      </select>
+    </div>
+
+    <!-- Error -->
+    <div *ngIf="errorMessage" class="alert alert-danger">
+      {{ errorMessage }}
+    </div>
+
+    <!-- Buttons -->
+    <div class="text-center">
+      <button
+        type="submit"
+        class="btn btn-primary"
+        [disabled]="loading || !employeeForm.form.valid"
+      >
+        {{ loading ? 'Saving...' : 'Save' }}
       </button>
       <button type="button" class="btn btn-secondary ms-2" (click)="cancel()">
         Cancel
@@ -2794,17 +2902,32 @@ export class EmployeeTransferComponent implements OnInit {
 
 ================================================================================
 File: src\app\employee\employee.component.html
-Size: 4.13 kB
+Size: 4.51 kB
 ================================================================================
 
 <div class="p-4">
   <div class="container">
+    <!-- ✅ Top-center Alert -->
+    <div *ngIf="alertMessage" class="d-flex justify-content-center mb-3">
+      <div
+        class="alert"
+        [ngClass]="alertType === 'success' ? 'alert-success' : 'alert-danger'"
+        role="alert"
+        style="max-width: 500px; text-align: center;"
+      >
+        {{ alertMessage }}
+      </div>
+    </div>
+
     <!-- Header -->
     <div class="d-flex justify-content-between align-items-center mb-3">
       <h1 class="mb-0">Employees</h1>
 
       <!-- ✅ Filter Dropdown -->
+      <label for="employeeFilter" class="form-label visually-hidden">Filter Employees</label>
       <select
+        id="employeeFilter"
+        title="Filter Employees"
         class="form-select w-auto"
         [(ngModel)]="filterStatus"
         (change)="applyFilter()"
@@ -2826,7 +2949,7 @@ Size: 4.13 kB
         <tr>
           <th>Employee ID</th>
           <th>Email</th>
-          <th>Role</th>
+          <!-- <th>Role</th> -->
           <th>Position</th>
           <th>Department</th>
           <th>Hire Date</th>
@@ -2838,14 +2961,14 @@ Size: 4.13 kB
         <tr *ngFor="let emp of filteredEmployees">
           <td>{{ emp.EmployeeID }}</td>
           <td>{{ emp.email }}</td>
-          <td>{{ emp.role }}</td>
+          <!-- <td>{{ emp.role }}</td> -->
           <td>{{ emp.position }}</td>
           <td>{{ emp.departmentName }}</td>
           <td>{{ emp.hireDate | date: 'yyyy-MM-dd' }}</td>
           <td>
             <span
               class="badge"
-              [ngClass]="emp.status === 'active' ? 'bg-success' : 'bg-secondary'"
+              [ngClass]="emp.status === 'active' ? 'bg-success' : 'bg-danger'"
             >
               {{ emp.status }}
             </span>
@@ -2854,7 +2977,11 @@ Size: 4.13 kB
             <button class="btn btn-sm btn-info me-1" routerLink="/requests">
               Requests
             </button>
-            <button class="btn btn-sm btn-info me-1" routerLink="/admin/accounts">
+            <button
+              class="btn btn-sm btn-info me-1"
+              [routerLink]="['/workflows']"
+              [queryParams]="{ employeeId: emp.EmployeeID }"
+            >
               Workflows
             </button>
             <button
@@ -2869,10 +2996,6 @@ Size: 4.13 kB
             >
               Edit
             </button>
-            <!-- ✅ Toggle Status -->
-            <!-- <button class="btn btn-sm btn-secondary" (click)="toggleStatus(emp)">
-              {{ emp.status === 'active' ? 'Deactivate' : 'Activate' }}
-            </button> -->
           </td>
         </tr>
       </tbody>
@@ -2892,19 +3015,21 @@ Size: 4.13 kB
   </div>
 </div>
 
-<!-- ✅ Transfer Popup (unchanged) -->
-<div *ngIf="transferVisible"
-     style="position: fixed; inset: 0; background: rgba(0,0,0,0.5);
-            display: flex; justify-content: center; align-items: flex-start;
-            padding-top: 80px; z-index: 1050;">
-  <div class="card shadow" style="width: 400px;">
+<!-- ✅ Transfer Popup -->
+<div *ngIf="transferVisible" class="transfer-popup-overlay">
+  <div class="card shadow transfer-card">
     <div class="card-header d-flex justify-content-between align-items-center">
       <h5 class="mb-0">Transfer Employee: {{ selectedEmployee?.EmployeeID }}</h5>
-      <button type="button" class="btn-close" (click)="closeTransfer()"></button>
+      <button type="button" class="btn-close" (click)="closeTransfer()" title="Close" aria-label="Close"></button>
     </div>
     <div class="card-body">
-      <label class="form-label">Department</label>
-      <select [(ngModel)]="selectedDepartmentId" class="form-select mb-3">
+      <label for="departmentSelect" class="form-label">Department</label>
+      <select
+        id="departmentSelect"
+        title="Select Department"
+        [(ngModel)]="selectedDepartmentId"
+        class="form-select mb-3"
+      >
         <option *ngFor="let dept of departments" [value]="dept.id">
           {{ dept.name || dept.departmentName }}
         </option>
@@ -2920,7 +3045,7 @@ Size: 4.13 kB
 
 ================================================================================
 File: src\app\employee\employee.component.ts
-Size: 4.53 kB
+Size: 5.06 kB
 ================================================================================
 
 // src/app/employee/employee.component.ts
@@ -2954,13 +3079,17 @@ export class EmployeeComponent implements OnInit {
   loading = false;
   errorMessage = '';
 
-  // transfer popup state
+  // ✅ transfer popup state
   transferVisible = false;
   selectedEmployee: Employee | null = null;
   selectedDepartmentId: string | number | null = null;
 
-  // filter control
+  // ✅ filter control
   filterStatus: 'all' | 'active' | 'inactive' = 'all';
+
+  // ✅ alert state (replaces window.alert)
+  alertMessage: string | null = null;
+  alertType: 'success' | 'error' = 'success';
 
   constructor(
     private employeeService: EmployeeService,
@@ -3034,9 +3163,9 @@ export class EmployeeComponent implements OnInit {
       next: () => {
         emp.status = newStatus;
         this.applyFilter();
-        window.alert(`Status updated to ${newStatus}`);
+        this.showAlert(`✅ Status updated to ${newStatus}`, 'success');
       },
-      error: () => window.alert('❌ Failed to update status')
+      error: () => this.showAlert('❌ Failed to update status', 'error')
     });
   }
 
@@ -3063,7 +3192,10 @@ export class EmployeeComponent implements OnInit {
 
   /** Confirm transfer */
   confirmTransfer(): void {
-    if (!this.selectedEmployee?.EmployeeID || !this.selectedDepartmentId) return;
+    if (!this.selectedEmployee?.EmployeeID || !this.selectedDepartmentId) {
+      this.showAlert('❌ Please select a department', 'error');
+      return;
+    }
 
     this.employeeService
       .update(this.selectedEmployee.EmployeeID, {
@@ -3071,14 +3203,22 @@ export class EmployeeComponent implements OnInit {
       })
       .subscribe({
         next: () => {
-          window.alert(
-            `✅ Employee ${this.selectedEmployee?.EmployeeID} transferred successfully`
+          this.showAlert(
+            `✅ Employee ${this.selectedEmployee?.EmployeeID} transferred successfully`,
+            'success'
           );
           this.closeTransfer();
           this.loadEmployees();
         },
-        error: () => window.alert('❌ Transfer failed')
+        error: () => this.showAlert('❌ Transfer failed', 'error')
       });
+  }
+
+  /** ✅ Show alert (top-center, auto-hide) */
+  private showAlert(message: string, type: 'success' | 'error') {
+    this.alertMessage = message;
+    this.alertType = type;
+    setTimeout(() => (this.alertMessage = null), 3000);
   }
 }
 
@@ -3161,13 +3301,14 @@ Size: 36 B
 
 ================================================================================
 File: src\app\profile\details.component.html
-Size: 243 B
+Size: 295 B
 ================================================================================
 
 ﻿<h1>My Profile</h1>
 <p *ngIf="account">
     <strong>Name: </strong> {{account.title}} {{account.firstName}} {{account.lastName}}<br />
-    <strong>Email: </strong> {{account.email}}
+    <strong>Email: </strong> {{account.email}} <br/>
+    <strong>Role: </strong> {{account.role}}
 </p>
 <p><a routerLink="update">Update Profile</a></p>
 
@@ -3430,7 +3571,7 @@ Size: 2.06 kB
 ================================================================================
 
 <div class="container mt-4">
-  <h3>Add Request</h3>
+  <h1>Add Request</h1>
 
   <div *ngIf="error" class="alert alert-danger">{{ error }}</div>
 
@@ -3463,7 +3604,7 @@ Size: 2.06 kB
       <div formArrayName="items">
         <div *ngFor="let item of items.controls; let i = index" [formGroupName]="i" class="row g-2 mb-2">
           <div class="col">
-            <input class="form-control" formControlName="name" placeholder="Name" />
+            <input class="form-control" formControlName="name" placeholder="Item name" />
           </div>
           <div class="col-3">
             <input type="number" class="form-control" formControlName="quantity" min="1" />
@@ -4802,6 +4943,223 @@ if (!firstName || !lastName || !email) {
         showSection('accounts');
 
 ================================================================================
+File: src\app\workflows\workflows-routing.module.ts
+Size: 489 B
+================================================================================
+
+// src/app/workflows/workflows-routing.module.ts
+import { NgModule } from '@angular/core';
+import { RouterModule, Routes } from '@angular/router';
+import { WorkflowsComponent } from './workflows.component';
+import { AuthGuard } from '../_helpers';
+
+const routes: Routes = [
+  { path: '', component: WorkflowsComponent, canActivate: [AuthGuard] }
+];
+
+@NgModule({
+  imports: [RouterModule.forChild(routes)],
+  exports: [RouterModule]
+})
+export class WorkflowsRoutingModule {}
+
+
+================================================================================
+File: src\app\workflows\workflows.component.html
+Size: 1.55 kB
+================================================================================
+
+<div class="container mt-4">
+  <h2 *ngIf="!employeeId">All Workflows</h2>
+  <h2 *ngIf="employeeId">Workflows for Employee: <u>{{ employeeId }}</u></h2>
+
+  <div *ngIf="loading" class="alert alert-info">Loading workflows...</div>
+  <div *ngIf="error" class="alert alert-danger">{{ error }}</div>
+
+  <table *ngIf="!loading && workflows.length > 0" class="table table-striped mt-3">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Details</th>
+        <th style="width: 140px">Status</th>
+        <th>Created At</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let wf of workflows" [ngClass]="getRowClass(wf.status)">
+        <td>{{ wf.type }}</td>
+        <td>{{ wf.details }}</td>
+        <td>
+          <div class="d-flex align-items-center gap-2">
+            <select
+              #sel
+              class="form-select"
+              [ngClass]="getSelectClass(wf.status)"
+              [value]="wf.status"
+              (change)="onStatusChange(wf, sel.value)"
+              [disabled]="isUpdating(wf.id)"
+            >
+              <option *ngFor="let s of statuses" [value]="s">{{ s }}</option>
+            </select>
+
+            <div *ngIf="isUpdating(wf.id)" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></div>
+          </div>
+        </td>
+        <td>{{ wf.createdAt | date:'short' }}</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div *ngIf="!loading && workflows.length === 0" class="alert alert-warning">
+    No workflows found.
+  </div>
+</div>
+
+
+================================================================================
+File: src\app\workflows\workflows.component.ts
+Size: 3.36 kB
+================================================================================
+
+// src/app/workflows/workflows.component.ts
+import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { finalize } from 'rxjs/operators';
+import { WorkflowService } from '@app/_services/workflow.service';
+
+@Component({
+  selector: 'app-workflows',
+  templateUrl: './workflows.component.html'
+})
+export class WorkflowsComponent implements OnInit {
+  workflows: any[] = [];
+  employeeId?: string;
+  loading = false;
+  error: string | null = null;
+
+  readonly statuses = ['pending', 'approved', 'rejected'];
+  updatingMap: Record<number | string, boolean> = {};
+
+  constructor(
+    private workflowService: WorkflowService,
+    private route: ActivatedRoute
+  ) {}
+
+  ngOnInit(): void {
+    this.employeeId = this.route.snapshot.queryParamMap.get('employeeId') || undefined;
+    this.loadWorkflows();
+  }
+
+  loadWorkflows(): void {
+    this.loading = true;
+    this.error = null;
+
+    this.workflowService.getAll(this.employeeId).subscribe({
+      next: (data: any[]) => {
+        this.workflows = data || [];
+        this.loading = false;
+      },
+      error: (err: any) => {
+        console.error('Error loading workflows', err);
+        this.error = 'Failed to load workflows';
+        this.loading = false;
+      }
+    });
+  }
+
+  isUpdating(id: number | string): boolean {
+    return !!this.updatingMap[id];
+  }
+
+  // color classes for full row
+  getRowClass(status: string): any {
+    return {
+      'table-warning': status === 'pending',
+      'table-success': status === 'approved',
+      'table-danger': status === 'rejected'
+    };
+  }
+
+  // classes for select element
+  getSelectClass(status: string): string {
+    switch (status) {
+      case 'approved':
+        return 'bg-success text-white';
+      case 'rejected':
+        return 'bg-danger text-white';
+      default:
+        return 'bg-warning text-dark';
+    }
+  }
+
+  // handle status change: use wf.id (numeric), PUT to backend, then re-fetch the workflow for truth
+  onStatusChange(wf: any, newStatus: string): void {
+    if (!wf || wf.id == null) return;
+    const prev = wf.status ?? '';
+    if (prev === newStatus) return;
+    if (!this.statuses.includes(newStatus)) {
+      alert('Invalid status selected');
+      wf.status = prev;
+      return;
+    }
+
+    this.updatingMap[wf.id] = true;
+
+    this.workflowService
+      .update(wf.id, { status: newStatus })
+      .pipe(finalize(() => (this.updatingMap[wf.id] = false)))
+      .subscribe({
+        next: () => {
+          // fetch fresh record to ensure UI reflects DB
+          this.workflowService.getById(wf.id).subscribe({
+            next: fresh => {
+              wf.status = fresh?.status ?? newStatus;
+            },
+            error: (err: any) => {
+              // if fetch fails, fall back to optimistic value but log error
+              console.error('Failed to refresh workflow after update', err);
+              wf.status = newStatus;
+            }
+          });
+        },
+        error: (err: any) => {
+          console.error('Failed to update workflow status', { wfId: wf.id, err });
+          const msg = err?.error?.message || err?.message || 'Failed to update status';
+          alert(msg);
+          wf.status = prev; // rollback
+        }
+      });
+  }
+}
+
+
+================================================================================
+File: src\app\workflows\workflows.module.ts
+Size: 557 B
+================================================================================
+
+// src/app/workflows/workflows.module.ts
+import { NgModule } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { RouterModule } from '@angular/router';
+
+import { WorkflowsComponent } from './workflows.component';
+import { WorkflowsRoutingModule } from './workflows-routing.module';
+
+@NgModule({
+  declarations: [WorkflowsComponent],
+  imports: [
+    CommonModule,
+    FormsModule,
+    RouterModule,
+    WorkflowsRoutingModule
+  ]
+})
+export class WorkflowsModule {}
+
+
+================================================================================
 File: src\app\_components\alert.component.html
 Size: 314 B
 ================================================================================
@@ -5978,6 +6336,75 @@ export class RequestService {
   // Delete a request
   delete(id: number): Observable<void> {
     return this.http.delete<void>(`${this.baseUrl}/${id}`);
+  }
+}
+
+
+================================================================================
+File: src\app\_services\workflow.service.ts
+Size: 1.98 kB
+================================================================================
+
+// src/app/_services/workflow.service.ts
+import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { environment } from '@environments/environment';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
+
+@Injectable({ providedIn: 'root' })
+export class WorkflowService {
+  private base = `${environment.apiUrl}/workflows`;
+
+  constructor(private http: HttpClient) {}
+
+  // Get all workflows (optionally filter by employeeId)
+  getAll(employeeId?: string): Observable<any[]> {
+    const options: any = { observe: 'body' as const };
+    if (employeeId) options.params = { employeeId };
+
+    return this.http.get<any>(this.base, options).pipe(
+      map((res: any) => {
+        const workflows = (res || []) as any[];
+        return workflows.map((wf: any) => ({
+          ...wf,
+          details:
+            typeof wf.details === 'object' && wf.details !== null
+              ? JSON.stringify(wf.details)
+              : wf.details
+        }));
+      })
+    );
+  }
+
+  // Get single workflow by numeric id
+  getById(id: number | string): Observable<any> {
+    return this.http
+      .get<any>(`${this.base}/${id}`, { observe: 'body' as const })
+      .pipe(
+        map((wf: any) => ({
+          ...wf,
+          details:
+            typeof wf.details === 'object' && wf.details !== null
+              ? JSON.stringify(wf.details)
+              : wf.details
+        }))
+      );
+  }
+
+  // Update workflow (use PUT because your backend accepted PUT in Postman)
+  update(id: number | string, body: any): Observable<any> {
+    return this.http
+      .put<any>(`${this.base}/${id}`, body, { observe: 'body' as const })
+      .pipe(
+        map((wf: any) => ({
+          ...wf,
+          details:
+            typeof wf.details === 'object' && wf.details !== null
+              ? JSON.stringify(wf.details)
+              : wf.details
+        }))
+      );
   }
 }
 

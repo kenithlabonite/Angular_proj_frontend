@@ -1,3 +1,4 @@
+<!-- src/app/employee/employee-add.component.html -->
 <div class="container mt-4">
   <h2>Add Employee</h2>
 
@@ -11,6 +12,8 @@
         [(ngModel)]="employee.EmployeeID"
         name="EmployeeID"
         disabled
+        placeholder="Auto-generated Employee ID"
+        title="Employee ID (auto-generated)"
       />
     </div>
 
@@ -22,8 +25,15 @@
         [(ngModel)]="employee.accountId"
         name="accountId"
         required
+        title="Account"
       >
-        <option value="" disabled>Select account</option>
+        <option [ngValue]="undefined" disabled>----Select account----</option>
+
+        <!-- when there are no available accounts, show a disabled info option -->
+        <option *ngIf="accounts.length === 0" [ngValue]="undefined" disabled>
+          No available accounts
+        </option>
+
         <option *ngFor="let acc of accounts" [ngValue]="acc.id">
           {{ acc.firstName }} {{ acc.lastName }} ({{ acc.email }})
         </option>
@@ -38,8 +48,9 @@
         [(ngModel)]="employee.position"
         name="position"
         required
+        title="Position"
       >
-        <option value="" disabled>Select position</option>
+        <option value="" disabled>----Select position----</option>
         <option value="Intern / Trainee">Intern / Trainee</option>
         <option value="Assistant / Junior">Assistant / Junior</option>
         <option value="Staff / Associate">Staff / Associate</option>
@@ -50,7 +61,6 @@
         <option value="Director">Director</option>
         <option value="Vice President / Executive Director">Vice President / Executive Director</option>
         <option value="President / C-level">President / C-level</option>
-        <!-- Add more positions as needed -->
       </select>
     </div>
 
@@ -62,8 +72,9 @@
         [(ngModel)]="employee.departmentId"
         name="departmentId"
         required
+        title="Department"
       >
-        <option value="text-muted" disabled>----Select department----</option>
+        <option [ngValue]="undefined" disabled>----Select department----</option>
         <option *ngFor="let dept of departments" [ngValue]="dept.id">
           {{ dept.name }}
         </option>
@@ -79,6 +90,8 @@
         [(ngModel)]="employee.hireDate"
         name="hireDate"
         required
+        title="Hire Date"
+        placeholder="Select hire date"
       />
     </div>
 
@@ -90,6 +103,7 @@
         [(ngModel)]="employee.status"
         name="status"
         required
+        title="Status"
       >
         <option value="active">Active</option>
         <option value="inactive">Inactive</option>
