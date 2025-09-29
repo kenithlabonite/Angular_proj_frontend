@@ -1,4 +1,4 @@
-<div *ngIf="isOpen"
+<!-- <div *ngIf="isOpen"
      class="modal d-flex align-items-center justify-content-center show"
      tabindex="-1"
      style="background: rgba(0,0,0,0.5); display: block;"
@@ -7,13 +7,13 @@
   <div class="modal-dialog" (click)="$event.stopPropagation()">
     <div class="modal-content">
       
-      <!-- Header -->
+      Header
       <div class="modal-header">
         <h5 class="modal-title">Transfer Employee: {{ employee?.EmployeeID }}</h5>
         <button type="button" class="btn-close" (click)="close()"></button>
       </div>
 
-      <!-- Body -->
+      Body
       <div class="modal-body">
         <label for="department" class="form-label">Department</label>
         <select id="department" [(ngModel)]="selectedDepartmentId" class="form-select">
@@ -23,7 +23,7 @@
         </select>
       </div>
 
-      <!-- Footer -->
+      Footer
       <div class="modal-footer">
         <button type="button" class="btn btn-warning" (click)="transfer()" [disabled]="loading">
           Transfer
@@ -35,4 +35,4 @@
       
     </div>
   </div>
-</div>
+</div> -->

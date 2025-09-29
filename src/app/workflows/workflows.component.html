@@ -2,46 +2,81 @@
   <h2 *ngIf="!employeeId">All Workflows</h2>
   <h2 *ngIf="employeeId">Workflows for Employee: <u>{{ employeeId }}</u></h2>
 
+  <!-- Loading & Errors -->
   <div *ngIf="loading" class="alert alert-info">Loading workflows...</div>
   <div *ngIf="error" class="alert alert-danger">{{ error }}</div>
 
+  <!-- Workflows Table -->
   <table *ngIf="!loading && workflows.length > 0" class="table table-striped mt-3">
     <thead>
       <tr>
         <th>Type</th>
         <th>Details</th>
         <th>Status</th>
-        <th style="width: 140px">Actions</th>
+        <th style="width: 280px">Actions</th>
         <th>Created At</th>
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let wf of workflows" [ngClass]="getRowClass(wf.status)">
+      <tr *ngFor="let wf of workflows">
         <td>{{ wf.type }}</td>
         <td>{{ wf.details }}</td>
-        <!-- Apply titlecase pipe -->
-        <td >{{ wf.status | titlecase }}</td>
+
+        <!-- ✅ Status Badge -->
+        <td>
+          <span class="badge" [ngClass]="getStatusClass(wf.status)">
+            {{ wf.status | titlecase }}
+          </span>
+        </td>
+
+        <!-- ✅ Action Buttons -->
         <td>
           <div class="d-flex align-items-center gap-2">
-            <select
-              #sel
-              class="form-select"
-              [value]="wf.status"
-              (change)="onStatusChange(wf, sel.value)"
+            <!-- Show only if NOT pending -->
+            <button
+              *ngIf="wf.status !== 'pending'"
+              class="btn btn-sm btn-warning text-dark"
+              (click)="updateStatus(wf, 'pending')"
               [disabled]="isUpdating(wf.id)"
             >
-              <!-- Also titlecase in dropdown -->
-              <option *ngFor="let s of statuses" [value]="s">{{ s | titlecase }}</option>
-            </select>
+              Pending
+            </button>
 
-            <div *ngIf="isUpdating(wf.id)" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></div>
+            <!-- Show only if NOT approved -->
+            <button
+              *ngIf="wf.status !== 'approved'"
+              class="btn btn-sm btn-success"
+              (click)="updateStatus(wf, 'approved')"
+              [disabled]="isUpdating(wf.id)"
+            >
+              Approve
+            </button>
+
+            <!-- Show only if NOT rejected -->
+            <button
+              *ngIf="wf.status !== 'rejected'"
+              class="btn btn-sm btn-danger"
+              (click)="updateStatus(wf, 'rejected')"
+              [disabled]="isUpdating(wf.id)"
+            >
+              Reject
+            </button>
+
+            <!-- Spinner -->
+            <div
+              *ngIf="isUpdating(wf.id)"
+              class="spinner-border spinner-border-sm"
+              role="status"
+            ></div>
           </div>
         </td>
-        <td>{{ wf.createdAt }}</td>
+
+        <td>{{ wf.createdAt | date: 'yyyy-MM-dd HH:mm' }}</td>
       </tr>
     </tbody>
   </table>
 
+  <!-- No Workflows -->
   <div *ngIf="!loading && workflows.length === 0" class="alert alert-warning">
     No workflows found.
   </div>

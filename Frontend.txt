@@ -1197,7 +1197,7 @@ export class AccountsModule {}
 
 ================================================================================
 File: src\app\admin\accounts\add-edit.component.html
-Size: 4.25 kB
+Size: 4.68 kB
 ================================================================================
 
 ﻿<h1>{{ title }}</h1>
@@ -1205,8 +1205,8 @@ Size: 4.25 kB
 <form *ngIf="!loading" [formGroup]="form" (ngSubmit)="onSubmit()">
   <div class="row">
     <div class="mb-3 col-2">
-      <label class="form-label">Title</label>
-      <select formControlName="title" class="form-select" [ngClass]="{ 'is-invalid': submitted && f.title.errors }">
+      <label class="form-label" for="titleSelect">Title</label>
+      <select id="titleSelect" formControlName="title" class="form-select" [ngClass]="{ 'is-invalid': submitted && f.title.errors }">
         <option value="">-- Select --</option>
         <option value="Mr">Mr</option>
         <option value="Mrs">Mrs</option>
@@ -1218,14 +1218,16 @@ Size: 4.25 kB
     <div class="mb-3 col-5">
       <label class="form-label">First Name</label>
       <input type="text" formControlName="firstName" class="form-control"
-             [ngClass]="{ 'is-invalid': submitted && f.firstName.errors }" />
+             [ngClass]="{ 'is-invalid': submitted && f.firstName.errors }"
+             placeholder="Enter first name" title="First Name" />
       <div *ngIf="submitted && f.firstName.errors" class="invalid-feedback">First Name is required</div>
     </div>
 
     <div class="mb-3 col-5">
       <label class="form-label">Last Name</label>
       <input type="text" formControlName="lastName" class="form-control"
-             [ngClass]="{ 'is-invalid': submitted && f.lastName.errors }" />
+             [ngClass]="{ 'is-invalid': submitted && f.lastName.errors }"
+             placeholder="Enter last name" title="Last Name" />
       <div *ngIf="submitted && f.lastName.errors" class="invalid-feedback">Last Name is required</div>
     </div>
   </div>
@@ -1233,7 +1235,8 @@ Size: 4.25 kB
   <div class="mb-3">
     <label class="form-label">Email</label>
     <input type="email" formControlName="email" class="form-control"
-           [ngClass]="{ 'is-invalid': submitted && f.email.errors }" />
+           [ngClass]="{ 'is-invalid': submitted && f.email.errors }"
+           placeholder="Enter email" title="Email" />
     <div *ngIf="submitted && f.email.errors" class="invalid-feedback">
       <span *ngIf="f.email.errors?.required">Email is required</span>
       <span *ngIf="f.email.errors?.email">Enter a valid email</span>
@@ -1241,8 +1244,8 @@ Size: 4.25 kB
   </div>
 
   <div class="mb-3">
-    <label class="form-label">Role</label>
-    <select formControlName="role" class="form-select" [ngClass]="{ 'is-invalid': submitted && f.role.errors }">
+    <label class="form-label" for="roleSelect">Role</label>
+    <select id="roleSelect" title="Role" formControlName="role" class="form-select" [ngClass]="{ 'is-invalid': submitted && f.role.errors }">
       <option value="">-- Select Role --</option>
       <option value="Admin">Admin</option>
       <option value="User">User</option>
@@ -1252,7 +1255,7 @@ Size: 4.25 kB
 
   <div class="mb-3">
     <label class="form-label">Status</label>
-    <select formControlName="status" class="form-select" [ngClass]="{ 'is-invalid': submitted && f.status.errors }">
+    <select formControlName="status" class="form-select" title="Status" [ngClass]="{ 'is-invalid': submitted && f.status.errors }">
       <option value="">-- Select Status --</option>
       <option value="active">Active</option>
       <option value="inactive">Inactive</option>
@@ -1264,9 +1267,10 @@ Size: 4.25 kB
   <div class="mb-3">
     <label class="form-label">Password</label>
     <input type="password" formControlName="password" class="form-control"
-           [ngClass]="{ 'is-invalid': submitted && f.password.errors }" autocomplete="new-password" />
+           [ngClass]="{ 'is-invalid': submitted && f.password.errors }" autocomplete="new-password"
+           title="Password" placeholder="Enter password" />
     <div *ngIf="!isPasswordProvided()" class="form-text">
-      Leave blank to skip setting a password now.
+      Password and confirm password is required when adding a new account.
     </div>
     <div *ngIf="submitted && f.password.errors?.minlength" class="invalid-feedback">
       Password must be at least 6 characters.
@@ -1277,7 +1281,8 @@ Size: 4.25 kB
   <div class="mb-3" *ngIf="isPasswordProvided()">
     <label class="form-label">Confirm Password</label>
     <input type="password" formControlName="confirmPassword" class="form-control"
-           [ngClass]="{ 'is-invalid': submitted && f.confirmPassword.errors }" autocomplete="new-password" />
+           [ngClass]="{ 'is-invalid': submitted && f.confirmPassword.errors }" autocomplete="new-password"
+           title="Confirm Password" placeholder="Confirm password" />
     <div *ngIf="submitted && f.confirmPassword.errors?.required" class="invalid-feedback">
       Please confirm the password.
     </div>
@@ -1466,7 +1471,7 @@ export class AddEditComponent implements OnInit, OnDestroy {
 
 ================================================================================
 File: src\app\admin\accounts\list.component.html
-Size: 2.3 kB
+Size: 2.32 kB
 ================================================================================
 
 ﻿<h1>Accounts</h1>
@@ -1475,20 +1480,20 @@ Size: 2.3 kB
 <table class="table table-striped">
     <thead>
         <tr>
-            <th style="width:10%">Title</th>
-            <th style="width:15%">First Name</th>
-            <th style="width:15%">Last Name</th>
+            <th style="width:5%">Title</th>
+            <th style="width:10%">First Name</th>
+            <th style="width:10%">Last Name</th>
             <th style="width:30%">Email</th>
             <th style="width:10%">Role</th>
-            <th style="width:10%">Status</th>
-            <th style="width:10%">Actions</th>
+            <th style="width:5%">Status</th>
+            <th style="width:0%">Actions</th>
         </tr>
     </thead>
     <tbody>
         <tr *ngFor="let account of accounts">
             <td class="align-middle">{{account.title}}</td>
-            <td class="align-middle">{{account.firstName}}</td>
-            <td class="align-middle">{{account.lastName}}</td>
+            <td class="align-middle">{{account.firstName | titlecase}}</td>
+            <td class="align-middle">{{account.lastName | titlecase}}</td>
             <td class="align-middle">{{account.email}}</td>
             <td class="align-middle">{{account.role}}</td>
             <td class="align-middle">
@@ -1748,26 +1753,31 @@ export class AppRoutingModule {}
 
 ================================================================================
 File: src\app\app.component.html
-Size: 2.02 kB
+Size: 1.9 kB
 ================================================================================
 
 ﻿<div class="app-container" [ngClass]="{ 'bg-light': account }">
   <!-- Main Navigation -->
-  <nav class="navbar navbar-expand-lg navbar-dark bg-dark px-3 mb-4" *ngIf="account">
+  <nav
+    class="navbar navbar-expand-lg navbar-dark bg-success fixed-top px-3"
+    *ngIf="account"
+  >
     <div class="container-fluid">
       <!-- Left nav -->
       <div class="navbar-nav">
-        <a 
-          routerLink="/" 
-          routerLinkActive="active" 
-          [routerLinkActiveOptions]="{ exact: true }" 
-          class="nav-item nav-link">
+        <a
+          routerLink="/"
+          routerLinkActive="active"
+          [routerLinkActiveOptions]="{ exact: true }"
+          class="nav-item nav-link"
+        >
           Home
         </a>
-        <a 
-          routerLink="/profile" 
-          routerLinkActive="active" 
-          class="nav-item nav-link">
+        <a
+          routerLink="/profile"
+          routerLinkActive="active"
+          class="nav-item nav-link"
+        >
           Profile
         </a>
       </div>
@@ -1775,39 +1785,37 @@ Size: 2.02 kB
       <!-- Right nav -->
       <div class="navbar-nav ms-auto">
         <!-- Admin-only -->
-        <a 
-          *ngIf="account.role === Role.Admin" 
-          routerLink="/admin/accounts" 
-          routerLinkActive="active" 
-          class="nav-item nav-link">
+        <a
+          *ngIf="account.role === Role.Admin"
+          routerLink="/admin/accounts"
+          routerLinkActive="active"
+          class="nav-item nav-link"
+        >
           Accounts
         </a>
 
         <!-- Shared links -->
-        <a 
-          routerLink="/employees" 
-          routerLinkActive="active" 
-          class="nav-item nav-link">
+        <a
+          routerLink="/employees"
+          routerLinkActive="active"
+          class="nav-item nav-link"
+        >
           Employees
         </a>
-        <a 
-          routerLink="/departments" 
-          routerLinkActive="active" 
-          class="nav-item nav-link">
+        <a
+          routerLink="/departments"
+          routerLinkActive="active"
+          class="nav-item nav-link"
+        >
           Departments
         </a>
-        <a 
-          routerLink="/requests" 
-          routerLinkActive="active" 
-          class="nav-item nav-link">
+        <a
+          routerLink="/requests"
+          routerLinkActive="active"
+          class="nav-item nav-link"
+        >
           Requests
         </a>
-        <!-- <a 
-          routerLink="/workflows" 
-          routerLinkActive="active" 
-          class="nav-item nav-link">
-          Workflows
-        </a> -->
 
         <!-- Logout -->
         <button (click)="logout()" class="btn btn-link nav-item nav-link">
@@ -1817,14 +1825,13 @@ Size: 2.02 kB
     </div>
   </nav>
 
-  <!-- Subnav Router Outlet -->
-  <router-outlet name="subnav"></router-outlet>
+  <div class="container-fluid" style="padding-top: 70px;">
+    <router-outlet name="subnav"></router-outlet>
 
-  <!-- Global Alerts -->
-  <alert></alert>
+    <alert></alert>
 
-  <!-- Main Router Outlet -->
-  <router-outlet></router-outlet>
+    <router-outlet></router-outlet>
+  </div>
 </div>
 
 
@@ -2217,7 +2224,7 @@ export class DepartmentModule {}
 
 ================================================================================
 File: src\app\employee\employee-add.component.html
-Size: 3.85 kB
+Size: 4.13 kB
 ================================================================================
 
 <!-- src/app/employee/employee-add.component.html -->
@@ -2234,6 +2241,8 @@ Size: 3.85 kB
         [(ngModel)]="employee.EmployeeID"
         name="EmployeeID"
         disabled
+        placeholder="Auto-generated Employee ID"
+        title="Employee ID (auto-generated)"
       />
     </div>
 
@@ -2245,8 +2254,9 @@ Size: 3.85 kB
         [(ngModel)]="employee.accountId"
         name="accountId"
         required
+        title="Account"
       >
-        <option [ngValue]="undefined" disabled>Select account</option>
+        <option [ngValue]="undefined" disabled>----Select account----</option>
 
         <!-- when there are no available accounts, show a disabled info option -->
         <option *ngIf="accounts.length === 0" [ngValue]="undefined" disabled>
@@ -2267,8 +2277,9 @@ Size: 3.85 kB
         [(ngModel)]="employee.position"
         name="position"
         required
+        title="Position"
       >
-        <option value="" disabled>Select position</option>
+        <option value="" disabled>----Select position----</option>
         <option value="Intern / Trainee">Intern / Trainee</option>
         <option value="Assistant / Junior">Assistant / Junior</option>
         <option value="Staff / Associate">Staff / Associate</option>
@@ -2290,6 +2301,7 @@ Size: 3.85 kB
         [(ngModel)]="employee.departmentId"
         name="departmentId"
         required
+        title="Department"
       >
         <option [ngValue]="undefined" disabled>----Select department----</option>
         <option *ngFor="let dept of departments" [ngValue]="dept.id">
@@ -2307,6 +2319,8 @@ Size: 3.85 kB
         [(ngModel)]="employee.hireDate"
         name="hireDate"
         required
+        title="Hire Date"
+        placeholder="Select hire date"
       />
     </div>
 
@@ -2318,6 +2332,7 @@ Size: 3.85 kB
         [(ngModel)]="employee.status"
         name="status"
         required
+        title="Status"
       >
         <option value="active">Active</option>
         <option value="inactive">Inactive</option>
@@ -4966,7 +4981,7 @@ export class WorkflowsRoutingModule {}
 
 ================================================================================
 File: src\app\workflows\workflows.component.html
-Size: 1.55 kB
+Size: 1.66 kB
 ================================================================================
 
 <div class="container mt-4">
@@ -4981,7 +4996,8 @@ Size: 1.55 kB
       <tr>
         <th>Type</th>
         <th>Details</th>
-        <th style="width: 140px">Status</th>
+        <th>Status</th>
+        <th style="width: 140px">Actions</th>
         <th>Created At</th>
       </tr>
     </thead>
@@ -4989,23 +5005,25 @@ Size: 1.55 kB
       <tr *ngFor="let wf of workflows" [ngClass]="getRowClass(wf.status)">
         <td>{{ wf.type }}</td>
         <td>{{ wf.details }}</td>
+        <!-- Apply titlecase pipe -->
+        <td >{{ wf.status | titlecase }}</td>
         <td>
           <div class="d-flex align-items-center gap-2">
             <select
               #sel
               class="form-select"
-              [ngClass]="getSelectClass(wf.status)"
               [value]="wf.status"
               (change)="onStatusChange(wf, sel.value)"
               [disabled]="isUpdating(wf.id)"
             >
-              <option *ngFor="let s of statuses" [value]="s">{{ s }}</option>
+              <!-- Also titlecase in dropdown -->
+              <option *ngFor="let s of statuses" [value]="s">{{ s | titlecase }}</option>
             </select>
 
             <div *ngIf="isUpdating(wf.id)" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></div>
           </div>
         </td>
-        <td>{{ wf.createdAt | date:'short' }}</td>
+        <td>{{ wf.createdAt }}</td>
       </tr>
     </tbody>
   </table>
@@ -5018,7 +5036,7 @@ Size: 1.55 kB
 
 ================================================================================
 File: src\app\workflows\workflows.component.ts
-Size: 3.36 kB
+Size: 3.37 kB
 ================================================================================
 
 // src/app/workflows/workflows.component.ts
@@ -5081,7 +5099,7 @@ export class WorkflowsComponent implements OnInit {
   }
 
   // classes for select element
-  getSelectClass(status: string): string {
+ /*  getSelectClass(status: string): string {
     switch (status) {
       case 'approved':
         return 'bg-success text-white';
@@ -5090,7 +5108,7 @@ export class WorkflowsComponent implements OnInit {
       default:
         return 'bg-warning text-dark';
     }
-  }
+  } */
 
   // handle status change: use wf.id (numeric), PUT to backend, then re-fetch the workflow for truth
   onStatusChange(wf: any, newStatus: string): void {

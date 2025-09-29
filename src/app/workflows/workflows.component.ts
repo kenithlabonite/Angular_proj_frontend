@@ -14,7 +14,10 @@ export class WorkflowsComponent implements OnInit {
   loading = false;
   error: string | null = null;
 
+  // statuses supported by backend
   readonly statuses = ['pending', 'approved', 'rejected'];
+
+  // track updating workflows (for spinners/disabled buttons)
   updatingMap: Record<number | string, boolean> = {};
 
   constructor(
@@ -27,6 +30,7 @@ export class WorkflowsComponent implements OnInit {
     this.loadWorkflows();
   }
 
+  /** Load all workflows (optionally filtered by employee) */
   loadWorkflows(): void {
     this.loading = true;
     this.error = null;
@@ -44,42 +48,35 @@ export class WorkflowsComponent implements OnInit {
     });
   }
 
+  /** Check if workflow is updating */
   isUpdating(id: number | string): boolean {
     return !!this.updatingMap[id];
   }
 
-  // color classes for full row
-  getRowClass(status: string): any {
-    return {
-      'table-warning': status === 'pending',
-      'table-success': status === 'approved',
-      'table-danger': status === 'rejected'
-    };
+  /** Map status → badge color */
+  getStatusClass(status: string): string {
+    const s = (status || '').toLowerCase();
+    if (s === 'pending') return 'bg-warning text-dark';
+    if (s === 'approved') return 'bg-success';
+    if (s === 'rejected') return 'bg-danger';
+    return 'bg-secondary';
   }
 
-  // classes for select element
- /*  getSelectClass(status: string): string {
-    switch (status) {
-      case 'approved':
-        return 'bg-success text-white';
-      case 'rejected':
-        return 'bg-danger text-white';
-      default:
-        return 'bg-warning text-dark';
-    }
-  } */
-
-  // handle status change: use wf.id (numeric), PUT to backend, then re-fetch the workflow for truth
-  onStatusChange(wf: any, newStatus: string): void {
+  /**
+   * Update workflow status (Approve/Reject buttons).
+   * Optimistic update → call backend → refresh workflow → rollback if failed.
+   */
+  updateStatus(wf: any, newStatus: string): void {
     if (!wf || wf.id == null) return;
     const prev = wf.status ?? '';
-    if (prev === newStatus) return;
-    if (!this.statuses.includes(newStatus)) {
+    if (prev.toLowerCase() === newStatus.toLowerCase()) return;
+    if (!this.statuses.includes(newStatus.toLowerCase())) {
       alert('Invalid status selected');
-      wf.status = prev;
       return;
     }
 
+    // optimistic UI update
+    wf.status = newStatus;
     this.updatingMap[wf.id] = true;
 
     this.workflowService
@@ -87,19 +84,18 @@ export class WorkflowsComponent implements OnInit {
       .pipe(finalize(() => (this.updatingMap[wf.id] = false)))
       .subscribe({
         next: () => {
-          // fetch fresh record to ensure UI reflects DB
+          // ensure UI matches backend
           this.workflowService.getById(wf.id).subscribe({
             next: fresh => {
               wf.status = fresh?.status ?? newStatus;
             },
-            error: (err: any) => {
-              // if fetch fails, fall back to optimistic value but log error
+            error: err => {
               console.error('Failed to refresh workflow after update', err);
               wf.status = newStatus;
             }
           });
         },
-        error: (err: any) => {
+        error: err => {
           console.error('Failed to update workflow status', { wfId: wf.id, err });
           const msg = err?.error?.message || err?.message || 'Failed to update status';
           alert(msg);

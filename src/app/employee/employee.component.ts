@@ -29,15 +29,15 @@ export class EmployeeComponent implements OnInit {
   loading = false;
   errorMessage = '';
 
-  // ✅ transfer popup state
+  // Transfer popup state
   transferVisible = false;
   selectedEmployee: Employee | null = null;
   selectedDepartmentId: string | number | null = null;
 
-  // ✅ filter control
+  // Filters
   filterStatus: 'all' | 'active' | 'inactive' = 'all';
 
-  // ✅ alert state (replaces window.alert)
+  // Alerts
   alertMessage: string | null = null;
   alertType: 'success' | 'error' = 'success';
 
@@ -51,7 +51,7 @@ export class EmployeeComponent implements OnInit {
     this.loadDepartments();
   }
 
-  /** Load all employees */
+  /** Load employees */
   private loadEmployees(): void {
     this.loading = true;
     this.employeeService
@@ -66,6 +66,12 @@ export class EmployeeComponent implements OnInit {
       )
       .subscribe((res: any[]) => {
         this.employees = (res || []).map(e => this.mapEmployee(e));
+
+        // ✅ Sort by EmployeeID (A → Z)
+        this.employees.sort((a, b) =>
+          a.EmployeeID.localeCompare(b.EmployeeID)
+        );
+
         this.applyFilter();
         this.loading = false;
       });
@@ -97,16 +103,13 @@ export class EmployeeComponent implements OnInit {
 
   /** Filter employees */
   applyFilter(): void {
-    if (this.filterStatus === 'all') {
-      this.filteredEmployees = [...this.employees];
-    } else {
-      this.filteredEmployees = this.employees.filter(
-        emp => emp.status === this.filterStatus
-      );
-    }
+    this.filteredEmployees =
+      this.filterStatus === 'all'
+        ? [...this.employees]
+        : this.employees.filter(emp => emp.status === this.filterStatus);
   }
 
-  /** Toggle employee status */
+  /** Toggle status */
   toggleStatus(emp: Employee): void {
     const newStatus = emp.status === 'active' ? 'inactive' : 'active';
     this.employeeService.update(emp.EmployeeID, { status: newStatus }).subscribe({
@@ -164,7 +167,7 @@ export class EmployeeComponent implements OnInit {
       });
   }
 
-  /** ✅ Show alert (top-center, auto-hide) */
+  /** Show alert */
   private showAlert(message: string, type: 'success' | 'error') {
     this.alertMessage = message;
     this.alertType = type;

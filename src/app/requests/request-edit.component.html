@@ -7,8 +7,8 @@
   <form [formGroup]="form" (ngSubmit)="save()" *ngIf="!loading">
     <!-- Type -->
     <div class="mb-3">
-      <label class="form-label">Type</label>
-      <select class="form-select" formControlName="type">
+      <label class="form-label" for="typeSelect">Type</label>
+      <select class="form-select" formControlName="type" id="typeSelect" title="Type">
         <option value="">-- Select Type --</option>
         <option *ngFor="let t of allowedTypes" [value]="t">
           {{ t | titlecase }}
@@ -19,7 +19,7 @@
     <!-- Employee -->
     <div class="mb-3">
       <label class="form-label">Employee</label>
-      <select class="form-select" formControlName="accountId">
+      <select class="form-select" formControlName="accountId" title="Employee">
         <option value="">-- Select Employee --</option>
         <option *ngFor="let e of employees" [value]="e.accountId">
           {{ e.displayName }}
@@ -36,16 +36,20 @@
             <input class="form-control" formControlName="name" placeholder="Name" />
           </div>
           <div class="col-3">
-            <input type="number" class="form-control" formControlName="quantity" min="1" />
+            <input type="number" class="form-control" formControlName="quantity" min="1" placeholder="Quantity" title="Quantity" />
           </div>
           <div class="col-auto">
             <button type="button" class="btn btn-danger" (click)="removeItem(i)">Remove</button>
           </div>
         </div>
       </div>
-      <button type="button" class="btn btn-secondary mt-2" (click)="addItem()">Add Item</button>
+      <div>
+      <button type="button" class="btn btn-secondary mt-2 me-2" (click)="addItem()">Add Item</button>
+      <button type="button" class="btn btn-danger mt-2 me-2" (click)="delete()" [disabled]="submitting">
+        Delete
+      </button>
     </div>
-
+</div>
     <!-- Actions -->
     <div class="mt-3">
       <button type="submit" class="btn btn-primary me-2" [disabled]="submitting">
@@ -53,9 +57,7 @@
         Update
       </button>
       <button type="button" class="btn btn-secondary me-2" (click)="cancel()">Cancel</button>
-      <button type="button" class="btn btn-danger" (click)="delete()" [disabled]="submitting">
-        Delete
-      </button>
+      
     </div>
   </form>
 </div>
