@@ -392,126 +392,11 @@ export class AccountRoutingModule { }
 
 ================================================================================
 File: src\app\account\account.component.html
-Size: 5.74 kB
+Size: 95 B
 ================================================================================
 
 <h1>Account Page</h1>
 <p>Welcome to the Account section. Manage your account details here.</p>
-<!-- <div class="card">
-                <div class="card-header"><h5>ACCOUNTS</h5></div>
-                <div class="card-body">
-                    <div class="table-responsive">
-                        <table class="table table-striped">
-                            <thead>
-                                <tr>
-                                    <th>Title</th>
-                                    <th>First Name</th>
-                                    <th>Last Name</th>
-                                    <th>Email</th>
-                                    <th>Role</th>
-                                    <th>Status</th>
-                                    <th>Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody id="accounts-table-body">
-                    <tr>
-                        <td>Mr</td>
-                        <td>Admin</td>
-                        <td>User</td>
-                        <td>admin@example.com</td>
-                        <td>Admin</td>
-                        <td><span class="badge bg-success">Active</span></td>
-                        <td>
-                            <button class="btn btn-sm btn-primary action-btn me-1" onclick="showAccountForm(1)">Edit</button>
-                            
-                        </td>
-                    </tr>
-                
-                    <tr>
-                        <td>Ms</td>
-                        <td>Normal</td>
-                        <td>User</td>
-                        <td>user@example.com</td>
-                        <td>User</td>
-                        <td><span class="badge bg-success">Active</span></td>
-                        <td>
-                            <button class="btn btn-sm btn-primary action-btn me-1" onclick="showAccountForm(2)">Edit</button>
-                            
-                        </td>
-                    </tr>
-                
-                    <tr>
-                        <td>Dr</td>
-                        <td>Inactive</td>
-                        <td>Person</td>
-                        <td>inactive@example.com</td>
-                        <td>User</td>
-                        <td><span class="badge bg-danger">Inactive</span></td>
-                        <td>
-                            <button class="btn btn-sm btn-primary action-btn me-1" onclick="showAccountForm(3)">Edit</button>
-                            
-                        </td>
-                    </tr>
-                </tbody>
-                        </table>
-                    </div>
-                    <button class="btn btn-primary float-end" onclick="showAccountForm(null)">Add Account</button>
-                </div>
-            </div>
-            <div id="account-form-section" class="">
-            <div class="card">
-                <div class="card-header"><h5 id="account-form-title">ADD ACCOUNT</h5></div>
-                <div class="card-body">
-                    
-                    <div class="alert alert-danger hidden" id="account-form-error"></div>
-                    <input type="hidden" id="account-id" value=""> 
-
-                    <div class="row mb-3">
-                        <div class="col-md-2">
-                            <label class="form-label">Title</label>
-                            <select class="form-select" id="account-title">
-                                <option>Mr</option>
-                                <option>Ms</option>
-                                <option>Mrs</option>
-                                <option>Dr</option>
-                            </select>
-                        </div>
-                        <div class="col-md-5">
-                            <label class="form-label">First Name</label>
-                            <input type="text" class="form-control" id="account-firstName">
-                        </div>
-                        <div class="col-md-5">
-                            <label class="form-label">Last Name</label>
-                            <input type="text" class="form-control" id="account-lastName">
-                        </div>
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Email</label>
-                        <input type="email" class="form-control" id="account-email">
-                    </div>
-                    <div class="row mb-3">
-                        <div class="col-md-6">
-                            <label class="form-label">Role</label>
-                            <select class="form-select" id="account-role">
-                                <option>Admin</option>
-                                <option>User</option>
-                            </select>
-                        </div>
-                        <div class="col-md-6">
-                            <label class="form-label">Status</label>
-                            <select class="form-select" id="account-status">
-                                <option>Active</option>
-                                <option>Inactive</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="text-center">
-                        <button class="btn btn-primary me-2" onclick="saveAccount()">Save</button>
-                        <button class="btn btn-secondary" onclick="showSection('accounts')">Cancel</button>
-                    </div>
-                </div>
-            </div>
-        </div> -->
 
 ================================================================================
 File: src\app\account\account.component.ts
@@ -2780,10 +2665,10 @@ export class EmployeeRoutingModule {}
 
 ================================================================================
 File: src\app\employee\employee-transfer.component.html
-Size: 1.27 kB
+Size: 1.25 kB
 ================================================================================
 
-<div *ngIf="isOpen"
+<!-- <div *ngIf="isOpen"
      class="modal d-flex align-items-center justify-content-center show"
      tabindex="-1"
      style="background: rgba(0,0,0,0.5); display: block;"
@@ -2792,13 +2677,13 @@ Size: 1.27 kB
   <div class="modal-dialog" (click)="$event.stopPropagation()">
     <div class="modal-content">
       
-      <!-- Header -->
+      Header
       <div class="modal-header">
         <h5 class="modal-title">Transfer Employee: {{ employee?.EmployeeID }}</h5>
         <button type="button" class="btn-close" (click)="close()"></button>
       </div>
 
-      <!-- Body -->
+      Body
       <div class="modal-body">
         <label for="department" class="form-label">Department</label>
         <select id="department" [(ngModel)]="selectedDepartmentId" class="form-select">
@@ -2808,7 +2693,7 @@ Size: 1.27 kB
         </select>
       </div>
 
-      <!-- Footer -->
+      Footer
       <div class="modal-footer">
         <button type="button" class="btn btn-warning" (click)="transfer()" [disabled]="loading">
           Transfer
@@ -2820,7 +2705,7 @@ Size: 1.27 kB
       
     </div>
   </div>
-</div>
+</div> -->
 
 
 ================================================================================
@@ -2917,12 +2802,12 @@ export class EmployeeTransferComponent implements OnInit {
 
 ================================================================================
 File: src\app\employee\employee.component.html
-Size: 4.51 kB
+Size: 4.21 kB
 ================================================================================
 
 <div class="p-4">
   <div class="container">
-    <!-- ✅ Top-center Alert -->
+    <!-- Alert -->
     <div *ngIf="alertMessage" class="d-flex justify-content-center mb-3">
       <div
         class="alert"
@@ -2938,16 +2823,13 @@ Size: 4.51 kB
     <div class="d-flex justify-content-between align-items-center mb-3">
       <h1 class="mb-0">Employees</h1>
 
-      <!-- ✅ Filter Dropdown -->
-      <label for="employeeFilter" class="form-label visually-hidden">Filter Employees</label>
+      <!-- Filter -->
       <select
-        id="employeeFilter"
-        title="Filter Employees"
         class="form-select w-auto"
         [(ngModel)]="filterStatus"
         (change)="applyFilter()"
       >
-        <option value="all">All Employees</option>
+        <option value="all">All</option>
         <option value="active">Active Only</option>
         <option value="inactive">Inactive Only</option>
       </select>
@@ -2964,7 +2846,6 @@ Size: 4.51 kB
         <tr>
           <th>Employee ID</th>
           <th>Email</th>
-          <!-- <th>Role</th> -->
           <th>Position</th>
           <th>Department</th>
           <th>Hire Date</th>
@@ -2976,7 +2857,6 @@ Size: 4.51 kB
         <tr *ngFor="let emp of filteredEmployees">
           <td>{{ emp.EmployeeID }}</td>
           <td>{{ emp.email }}</td>
-          <!-- <td>{{ emp.role }}</td> -->
           <td>{{ emp.position }}</td>
           <td>{{ emp.departmentName }}</td>
           <td>{{ emp.hireDate | date: 'yyyy-MM-dd' }}</td>
@@ -2988,25 +2868,22 @@ Size: 4.51 kB
               {{ emp.status }}
             </span>
           </td>
-          <td class="d-flex justify-content-center">
-            <button class="btn btn-sm btn-info me-1" routerLink="/requests">
+          <td class="d-flex justify-content-center gap-2">
+            <button class="btn btn-sm btn-info" routerLink="/requests">
               Requests
             </button>
             <button
-              class="btn btn-sm btn-info me-1"
+              class="btn btn-sm btn-info"
               [routerLink]="['/workflows']"
               [queryParams]="{ employeeId: emp.EmployeeID }"
             >
               Workflows
             </button>
-            <button
-              class="btn btn-sm btn-warning me-1"
-              (click)="openTransfer(emp)"
-            >
+            <button class="btn btn-sm btn-warning" (click)="openTransfer(emp)">
               Transfer
             </button>
             <button
-              class="btn btn-sm btn-primary me-1"
+              class="btn btn-sm btn-primary"
               [routerLink]="['/employees/edit', emp.EmployeeID]"
             >
               Edit
@@ -3016,42 +2893,52 @@ Size: 4.51 kB
       </tbody>
     </table>
 
+    <!-- Empty -->
+    <ng-template #noEmployees>
+      <p class="text-muted mt-3">No employees found.</p>
+    </ng-template>
+
     <!-- Add Employee -->
     <div class="text-end mt-3">
       <a routerLink="/employees/add" class="btn btn-primary">
         <i class="bi bi-person-plus"></i> Add Employee
       </a>
     </div>
-
-    <!-- Empty -->
-    <ng-template #noEmployees>
-      <p class="text-muted mt-3">No employees found.</p>
-    </ng-template>
   </div>
 </div>
 
-<!-- ✅ Transfer Popup -->
-<div *ngIf="transferVisible" class="transfer-popup-overlay">
-  <div class="card shadow transfer-card">
+<!-- Transfer Modal (Top Center) -->
+<div
+  *ngIf="transferVisible"
+  style="
+    position: fixed;
+    top: 60px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    max-width: 500px;
+    z-index: 1050;
+  "
+>
+  <div class="card shadow">
     <div class="card-header d-flex justify-content-between align-items-center">
       <h5 class="mb-0">Transfer Employee: {{ selectedEmployee?.EmployeeID }}</h5>
-      <button type="button" class="btn-close" (click)="closeTransfer()" title="Close" aria-label="Close"></button>
+      <button type="button" class="btn-close" (click)="closeTransfer()"></button>
     </div>
     <div class="card-body">
-      <label for="departmentSelect" class="form-label">Department</label>
-      <select
-        id="departmentSelect"
-        title="Select Department"
-        [(ngModel)]="selectedDepartmentId"
-        class="form-select mb-3"
-      >
+      <label class="form-label">Department</label>
+      <select class="form-select mb-3" [(ngModel)]="selectedDepartmentId">
         <option *ngFor="let dept of departments" [value]="dept.id">
           {{ dept.name || dept.departmentName }}
         </option>
       </select>
       <div class="d-flex justify-content-end gap-2">
-        <button class="btn btn-warning" (click)="confirmTransfer()">Transfer</button>
-        <button class="btn btn-secondary" (click)="closeTransfer()">Cancel</button>
+        <button class="btn btn-warning" (click)="confirmTransfer()">
+          Transfer
+        </button>
+        <button class="btn btn-secondary" (click)="closeTransfer()">
+          Cancel
+        </button>
       </div>
     </div>
   </div>
@@ -3060,7 +2947,7 @@ Size: 4.51 kB
 
 ================================================================================
 File: src\app\employee\employee.component.ts
-Size: 5.06 kB
+Size: 5.07 kB
 ================================================================================
 
 // src/app/employee/employee.component.ts
@@ -3094,15 +2981,15 @@ export class EmployeeComponent implements OnInit {
   loading = false;
   errorMessage = '';
 
-  // ✅ transfer popup state
+  // Transfer popup state
   transferVisible = false;
   selectedEmployee: Employee | null = null;
   selectedDepartmentId: string | number | null = null;
 
-  // ✅ filter control
+  // Filters
   filterStatus: 'all' | 'active' | 'inactive' = 'all';
 
-  // ✅ alert state (replaces window.alert)
+  // Alerts
   alertMessage: string | null = null;
   alertType: 'success' | 'error' = 'success';
 
@@ -3116,7 +3003,7 @@ export class EmployeeComponent implements OnInit {
     this.loadDepartments();
   }
 
-  /** Load all employees */
+  /** Load employees */
   private loadEmployees(): void {
     this.loading = true;
     this.employeeService
@@ -3131,6 +3018,12 @@ export class EmployeeComponent implements OnInit {
       )
       .subscribe((res: any[]) => {
         this.employees = (res || []).map(e => this.mapEmployee(e));
+
+        // ✅ Sort by EmployeeID (A → Z)
+        this.employees.sort((a, b) =>
+          a.EmployeeID.localeCompare(b.EmployeeID)
+        );
+
         this.applyFilter();
         this.loading = false;
       });
@@ -3162,16 +3055,13 @@ export class EmployeeComponent implements OnInit {
 
   /** Filter employees */
   applyFilter(): void {
-    if (this.filterStatus === 'all') {
-      this.filteredEmployees = [...this.employees];
-    } else {
-      this.filteredEmployees = this.employees.filter(
-        emp => emp.status === this.filterStatus
-      );
-    }
+    this.filteredEmployees =
+      this.filterStatus === 'all'
+        ? [...this.employees]
+        : this.employees.filter(emp => emp.status === this.filterStatus);
   }
 
-  /** Toggle employee status */
+  /** Toggle status */
   toggleStatus(emp: Employee): void {
     const newStatus = emp.status === 'active' ? 'inactive' : 'active';
     this.employeeService.update(emp.EmployeeID, { status: newStatus }).subscribe({
@@ -3229,7 +3119,7 @@ export class EmployeeComponent implements OnInit {
       });
   }
 
-  /** ✅ Show alert (top-center, auto-hide) */
+  /** Show alert */
   private showAlert(message: string, type: 'success' | 'error') {
     this.alertMessage = message;
     this.alertType = type;
@@ -3743,7 +3633,7 @@ export class RequestAddComponent implements OnInit {
 
 ================================================================================
 File: src\app\requests\request-edit.component.html
-Size: 2.27 kB
+Size: 2.42 kB
 ================================================================================
 
 <div class="container mt-4">
@@ -3755,8 +3645,8 @@ Size: 2.27 kB
   <form [formGroup]="form" (ngSubmit)="save()" *ngIf="!loading">
     <!-- Type -->
     <div class="mb-3">
-      <label class="form-label">Type</label>
-      <select class="form-select" formControlName="type">
+      <label class="form-label" for="typeSelect">Type</label>
+      <select class="form-select" formControlName="type" id="typeSelect" title="Type">
         <option value="">-- Select Type --</option>
         <option *ngFor="let t of allowedTypes" [value]="t">
           {{ t | titlecase }}
@@ -3767,7 +3657,7 @@ Size: 2.27 kB
     <!-- Employee -->
     <div class="mb-3">
       <label class="form-label">Employee</label>
-      <select class="form-select" formControlName="accountId">
+      <select class="form-select" formControlName="accountId" title="Employee">
         <option value="">-- Select Employee --</option>
         <option *ngFor="let e of employees" [value]="e.accountId">
           {{ e.displayName }}
@@ -3784,16 +3674,20 @@ Size: 2.27 kB
             <input class="form-control" formControlName="name" placeholder="Name" />
           </div>
           <div class="col-3">
-            <input type="number" class="form-control" formControlName="quantity" min="1" />
+            <input type="number" class="form-control" formControlName="quantity" min="1" placeholder="Quantity" title="Quantity" />
           </div>
           <div class="col-auto">
             <button type="button" class="btn btn-danger" (click)="removeItem(i)">Remove</button>
           </div>
         </div>
       </div>
-      <button type="button" class="btn btn-secondary mt-2" (click)="addItem()">Add Item</button>
+      <div>
+      <button type="button" class="btn btn-secondary mt-2 me-2" (click)="addItem()">Add Item</button>
+      <button type="button" class="btn btn-danger mt-2 me-2" (click)="delete()" [disabled]="submitting">
+        Delete
+      </button>
     </div>
-
+</div>
     <!-- Actions -->
     <div class="mt-3">
       <button type="submit" class="btn btn-primary me-2" [disabled]="submitting">
@@ -3801,9 +3695,7 @@ Size: 2.27 kB
         Update
       </button>
       <button type="button" class="btn btn-secondary me-2" (click)="cancel()">Cancel</button>
-      <button type="button" class="btn btn-danger" (click)="delete()" [disabled]="submitting">
-        Delete
-      </button>
+      
     </div>
   </form>
 </div>
@@ -4030,7 +3922,7 @@ export interface RequestView {
 
 ================================================================================
 File: src\app\requests\requests.component.html
-Size: 2.69 kB
+Size: 2.7 kB
 ================================================================================
 
 <div class="container mt-4">
@@ -4087,11 +3979,11 @@ Size: 2.69 kB
             </button>
 
             <!-- Delete button -->
-            <button
+            <!-- <button
               class="btn btn-sm btn-danger"
               (click)="delete(r.id!)">
               <i class="bi bi-trash"></i> Delete
-            </button>
+            </button> -->
           </td>
         </tr>
       </tbody>
@@ -4099,8 +3991,8 @@ Size: 2.69 kB
 
     <!-- Add New Request Button at bottom-right -->
     <div class="d-flex justify-content-end mt-3">
-      <button class="btn btn-success" routerLink="/requests/add">
-        + Add Request
+      <button class="btn btn-primary" routerLink="/requests/add">
+        Add Request
       </button>
     </div>
   </div>
@@ -4981,53 +4873,88 @@ export class WorkflowsRoutingModule {}
 
 ================================================================================
 File: src\app\workflows\workflows.component.html
-Size: 1.66 kB
+Size: 2.54 kB
 ================================================================================
 
 <div class="container mt-4">
   <h2 *ngIf="!employeeId">All Workflows</h2>
   <h2 *ngIf="employeeId">Workflows for Employee: <u>{{ employeeId }}</u></h2>
 
+  <!-- Loading & Errors -->
   <div *ngIf="loading" class="alert alert-info">Loading workflows...</div>
   <div *ngIf="error" class="alert alert-danger">{{ error }}</div>
 
+  <!-- Workflows Table -->
   <table *ngIf="!loading && workflows.length > 0" class="table table-striped mt-3">
     <thead>
       <tr>
         <th>Type</th>
         <th>Details</th>
         <th>Status</th>
-        <th style="width: 140px">Actions</th>
+        <th style="width: 280px">Actions</th>
         <th>Created At</th>
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let wf of workflows" [ngClass]="getRowClass(wf.status)">
+      <tr *ngFor="let wf of workflows">
         <td>{{ wf.type }}</td>
         <td>{{ wf.details }}</td>
-        <!-- Apply titlecase pipe -->
-        <td >{{ wf.status | titlecase }}</td>
+
+        <!-- ✅ Status Badge -->
+        <td>
+          <span class="badge" [ngClass]="getStatusClass(wf.status)">
+            {{ wf.status | titlecase }}
+          </span>
+        </td>
+
+        <!-- ✅ Action Buttons -->
         <td>
           <div class="d-flex align-items-center gap-2">
-            <select
-              #sel
-              class="form-select"
-              [value]="wf.status"
-              (change)="onStatusChange(wf, sel.value)"
+            <!-- Show only if NOT pending -->
+            <button
+              *ngIf="wf.status !== 'pending'"
+              class="btn btn-sm btn-warning text-dark"
+              (click)="updateStatus(wf, 'pending')"
               [disabled]="isUpdating(wf.id)"
             >
-              <!-- Also titlecase in dropdown -->
-              <option *ngFor="let s of statuses" [value]="s">{{ s | titlecase }}</option>
-            </select>
+              Pending
+            </button>
 
-            <div *ngIf="isUpdating(wf.id)" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></div>
+            <!-- Show only if NOT approved -->
+            <button
+              *ngIf="wf.status !== 'approved'"
+              class="btn btn-sm btn-success"
+              (click)="updateStatus(wf, 'approved')"
+              [disabled]="isUpdating(wf.id)"
+            >
+              Approve
+            </button>
+
+            <!-- Show only if NOT rejected -->
+            <button
+              *ngIf="wf.status !== 'rejected'"
+              class="btn btn-sm btn-danger"
+              (click)="updateStatus(wf, 'rejected')"
+              [disabled]="isUpdating(wf.id)"
+            >
+              Reject
+            </button>
+
+            <!-- Spinner -->
+            <div
+              *ngIf="isUpdating(wf.id)"
+              class="spinner-border spinner-border-sm"
+              role="status"
+            ></div>
           </div>
         </td>
-        <td>{{ wf.createdAt }}</td>
+
+        <td>{{ wf.createdAt | date: 'yyyy-MM-dd HH:mm' }}</td>
       </tr>
     </tbody>
   </table>
 
+  <!-- No Workflows -->
   <div *ngIf="!loading && workflows.length === 0" class="alert alert-warning">
     No workflows found.
   </div>
@@ -5036,7 +4963,7 @@ Size: 1.66 kB
 
 ================================================================================
 File: src\app\workflows\workflows.component.ts
-Size: 3.37 kB
+Size: 3.36 kB
 ================================================================================
 
 // src/app/workflows/workflows.component.ts
@@ -5055,7 +4982,10 @@ export class WorkflowsComponent implements OnInit {
   loading = false;
   error: string | null = null;
 
+  // statuses supported by backend
   readonly statuses = ['pending', 'approved', 'rejected'];
+
+  // track updating workflows (for spinners/disabled buttons)
   updatingMap: Record<number | string, boolean> = {};
 
   constructor(
@@ -5068,6 +4998,7 @@ export class WorkflowsComponent implements OnInit {
     this.loadWorkflows();
   }
 
+  /** Load all workflows (optionally filtered by employee) */
   loadWorkflows(): void {
     this.loading = true;
     this.error = null;
@@ -5085,42 +5016,35 @@ export class WorkflowsComponent implements OnInit {
     });
   }
 
+  /** Check if workflow is updating */
   isUpdating(id: number | string): boolean {
     return !!this.updatingMap[id];
   }
 
-  // color classes for full row
-  getRowClass(status: string): any {
-    return {
-      'table-warning': status === 'pending',
-      'table-success': status === 'approved',
-      'table-danger': status === 'rejected'
-    };
+  /** Map status → badge color */
+  getStatusClass(status: string): string {
+    const s = (status || '').toLowerCase();
+    if (s === 'pending') return 'bg-warning text-dark';
+    if (s === 'approved') return 'bg-success';
+    if (s === 'rejected') return 'bg-danger';
+    return 'bg-secondary';
   }
 
-  // classes for select element
- /*  getSelectClass(status: string): string {
-    switch (status) {
-      case 'approved':
-        return 'bg-success text-white';
-      case 'rejected':
-        return 'bg-danger text-white';
-      default:
-        return 'bg-warning text-dark';
-    }
-  } */
-
-  // handle status change: use wf.id (numeric), PUT to backend, then re-fetch the workflow for truth
-  onStatusChange(wf: any, newStatus: string): void {
+  /**
+   * Update workflow status (Approve/Reject buttons).
+   * Optimistic update → call backend → refresh workflow → rollback if failed.
+   */
+  updateStatus(wf: any, newStatus: string): void {
     if (!wf || wf.id == null) return;
     const prev = wf.status ?? '';
-    if (prev === newStatus) return;
-    if (!this.statuses.includes(newStatus)) {
+    if (prev.toLowerCase() === newStatus.toLowerCase()) return;
+    if (!this.statuses.includes(newStatus.toLowerCase())) {
       alert('Invalid status selected');
-      wf.status = prev;
       return;
     }
 
+    // optimistic UI update
+    wf.status = newStatus;
     this.updatingMap[wf.id] = true;
 
     this.workflowService
@@ -5128,19 +5052,18 @@ export class WorkflowsComponent implements OnInit {
       .pipe(finalize(() => (this.updatingMap[wf.id] = false)))
       .subscribe({
         next: () => {
-          // fetch fresh record to ensure UI reflects DB
+          // ensure UI matches backend
           this.workflowService.getById(wf.id).subscribe({
             next: fresh => {
               wf.status = fresh?.status ?? newStatus;
             },
-            error: (err: any) => {
-              // if fetch fails, fall back to optimistic value but log error
+            error: err => {
               console.error('Failed to refresh workflow after update', err);
               wf.status = newStatus;
             }
           });
         },
-        error: (err: any) => {
+        error: err => {
           console.error('Failed to update workflow status', { wfId: wf.id, err });
           const msg = err?.error?.message || err?.message || 'Failed to update status';
           alert(msg);
