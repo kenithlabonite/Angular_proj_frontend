@@ -74,6 +74,7 @@
         required
         title="Department"
       >
+      
         <option [ngValue]="undefined" disabled>----Select department----</option>
         <option *ngFor="let dept of departments" [ngValue]="dept.id">
           {{ dept.name }}
