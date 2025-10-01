@@ -2,6 +2,7 @@
 import { Component, OnInit } from '@angular/core';
 import { RequestService } from '@app/_services/request.service';
 import { RequestDto, RequestView } from './request.model';
+import { finalize } from 'rxjs/operators';
 
 @Component({
   selector: 'app-requests',
@@ -20,52 +21,82 @@ export class RequestsComponent implements OnInit {
 
   load(): void {
     this.loading = true;
-    this.requestSvc.getAll().subscribe({
-      next: (list: RequestDto[]) => {
-        this.requests = list.map(r => ({
-          // ✅ make sure id is always mapped
-          id: r.id ?? (r as any).requestId ?? (r as any).RequestID ?? null,
-          type: r.type,
-          status: r.status,
-          employeeId: r.employeeId ?? r.employeeCode ?? '',
-          employeeDisplay: r.Account
-            ? `${r.Account.firstName ?? ''} ${r.Account.lastName ?? ''} (${r.Account.email ?? ''})`
-            : '—',
-          itemsDisplay: this.normalizeItems(r.items)
-        }));
-        this.loading = false;
+    this.error = '';
+
+    this.requestSvc.getAll()
+      .pipe(finalize(() => (this.loading = false)))
+      .subscribe({
+        next: (list: RequestDto[]) => {
+          // If backend returns null/undefined, treat as empty array
+          const arr = Array.isArray(list) ? list : [];
+          this.requests = arr.map(r => this.toView(r));
+        },
+        error: (err: any) => {
+          console.error('Failed to load requests', err);
+          // Prefer readable message from server if present
+          this.error = err?.error?.message || err?.message || 'Failed to load requests';
+        }
+      });
+  }
+
+  delete(id: number | null | undefined): void {
+    if (!id) return;
+
+    if (!confirm('Are you sure you want to delete this request?')) return;
+
+    this.requestSvc.delete(id).subscribe({
+      next: () => {
+        // remove locally for immediate UI feedback
+        this.requests = this.requests.filter(r => r.id !== id);
       },
       error: (err: any) => {
-        console.error('Failed to load requests', err);
-        this.error = 'Failed to load requests';
-        this.loading = false;
+        console.error('Failed to delete request', err);
+        this.error = err?.error?.message || err?.message || 'Failed to delete request';
       }
     });
   }
 
-  delete(id: number): void {
-    if (!id) return;
+  // convert server DTO into the view model used by template
+  private toView(r: RequestDto): RequestView {
+    const id =
+      (r as any).id ??
+      (r as any).requestId ??
+      (r as any).RequestID ??
+      null;
 
-    if (confirm('Are you sure you want to delete this request?')) {
-      this.requestSvc.delete(id).subscribe({
-        next: () => {
-          this.requests = this.requests.filter(r => r.id !== id);
-        },
-        error: (err: any) => {
-          console.error('Failed to delete request', err);
-          this.error = 'Failed to delete request';
-        }
-      });
-    }
+    const account = (r as any).Account ?? null;
+    const firstName = account?.firstName ?? '';
+    const lastName = account?.lastName ?? '';
+    const email = account?.email ?? '';
+
+    return {
+      id,
+      type: r.type ?? '',
+      status: r.status ?? '',
+      employeeId: (r as any).employeeId ?? (r as any).employeeCode ?? '',
+      employeeDisplay: account
+        ? `${firstName} ${lastName} (${email})`.trim()
+        : '—',
+      itemsDisplay: this.normalizeItems(r.items)
+    };
   }
 
   private normalizeItems(raw: any): Array<{ name?: string; quantity?: number }> {
-    let parsed: any[] = [];
-    try {
-      parsed = typeof raw === 'string' ? JSON.parse(raw) : raw;
-    } catch {
-      parsed = [];
+    if (!raw) return [];
+    // If the backend already returns an array, keep it
+    if (Array.isArray(raw)) return raw as Array<{ name?: string; quantity?: number }>;
+
+    // If it's a JSON string, try to parse
+    if (typeof raw === 'string') {
+      try {
+        const parsed = JSON.parse(raw);
+        return Array.isArray(parsed) ? parsed : [];
+      } catch {
+        return [];
+      }
     }
-    return Array.isArray(parsed) ? parsed : [];
+
+    // Anything else => return empty
+    return [];
   }
 }
