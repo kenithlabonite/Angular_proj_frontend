@@ -20,8 +20,8 @@ export class DepartmentService {
     // Default to localhost:4000 if not configured in environment
     this.baseUrl = (environment && (environment as any).apiUrl)
       ? (environment as any).apiUrl.replace(/\/+$/, '')
-      : 'http://localhost:4000'
-      /* 'https://angular-proj-1.onrender.com' */
+      : /* 'http://localhost:4000' */
+        'https://angular-proj-1.onrender.com';
   }
 
   private buildUrl(path: string = ''): string {
